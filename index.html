@@ -1,0 +1,2574 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alibi</title>
+<meta name="description" content="Alibi : des énigmes de logique criminelle générées à l’infini. Qui est le coupable ?">
+<meta name="theme-color" content="#edf1f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1526" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Alibi">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+html { padding-top: env(safe-area-inset-top, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Concept : un dossier d'enquête sur papier millimétré. Bleu encre, tampon rouge, pièces en pastels. */
+:root {
+  --bg: #edf1f5; --paper: #fbfcfe; --ink: #14213d; --ink2: #4b5870; --line: #c9d3df; --wall: #2a3856;
+  --accent: #d6382d; --accent-ink: #ffffff; --good: #17806a; --bad: #c0301f; --chip: #e1e8f0; --hatch: rgba(20, 33, 61, 0.22);
+  --dots: rgba(20, 33, 61, 0.07); --shadow: 0 1px 0 rgba(20, 33, 61, 0.05), 0 10px 26px -16px rgba(20, 33, 61, 0.35);
+  --cross: #d6382d; --dim-filter: grayscale(0.95) contrast(0.7) brightness(1.12) opacity(0.75); --floor-filter: none; --tag-bg: rgba(255, 255, 255, 0.82); --tag-fg: #3a2a1b; --cell-line: rgba(46, 36, 25, 0.14); --obj-filter: none;
+  --p0: #14213d; --p1: #2563eb; --p2: #b45309; --p3: #047857; --p4: #6d28d9; --p5: #be185d; --p6: #0f766e; --p7: #c2410c; --p8: #475569;
+  --font-display: 'Bricolage Grotesque', 'Arial Narrow', system-ui, sans-serif;
+  --font-body: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1526; --paper: #172036; --ink: #e9eef7; --ink2: #9fadc6; --line: #2d3b5a; --wall: #b9c5e0;
+    --accent: #ff6b5c; --accent-ink: #1a0b09; --good: #3ccaa3; --bad: #ff7b6b; --chip: #243050; --hatch: rgba(233, 238, 247, 0.22);
+    --dots: rgba(233, 238, 247, 0.06); --shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 10px 26px -14px rgba(0, 0, 0, 0.7);
+    --cross: #ff5a4a; --dim-filter: grayscale(1) brightness(0.36); --floor-filter: brightness(0.58) saturate(0.92); --tag-bg: rgba(16, 20, 32, 0.78); --tag-fg: #f2e9da; --cell-line: rgba(255, 255, 255, 0.1); --obj-filter: brightness(0.92);
+    --p0: #e9eef7; --p1: #3b6fe0; --p2: #c2701c; --p3: #1b9a73; --p4: #8667e8; --p5: #d9508f; --p6: #1f9d93; --p7: #e0702b; --p8: #6f7f99;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1526; --paper: #172036; --ink: #e9eef7; --ink2: #9fadc6; --line: #2d3b5a; --wall: #b9c5e0;
+  --accent: #ff6b5c; --accent-ink: #1a0b09; --good: #3ccaa3; --bad: #ff7b6b; --chip: #243050; --hatch: rgba(233, 238, 247, 0.22);
+  --dots: rgba(233, 238, 247, 0.06); --shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 10px 26px -14px rgba(0, 0, 0, 0.7);
+  --cross: #ff5a4a; --dim-filter: grayscale(1) brightness(0.36); --floor-filter: brightness(0.58) saturate(0.92); --tag-bg: rgba(16, 20, 32, 0.78); --tag-fg: #f2e9da; --cell-line: rgba(255, 255, 255, 0.1); --obj-filter: brightness(0.92);
+  --p0: #e9eef7; --p1: #3b6fe0; --p2: #c2701c; --p3: #1b9a73; --p4: #8667e8; --p5: #d9508f; --p6: #1f9d93; --p7: #e0702b; --p8: #6f7f99;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { min-height: 100%; }
+body {
+  background-color: var(--bg); color: var(--ink);
+  background-image: radial-gradient(var(--dots) 1px, transparent 1px); background-size: 18px 18px;
+  font-family: var(--font-body); font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 0;
+}
+button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+.app { max-width: 560px; margin: 0 auto; padding-block: 6px 96px; display: flex; flex-direction: column; gap: 10px; }
+.mono { font-family: var(--font-mono); }
+
+/* En-tête */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand svg { width: 26px; height: 26px; color: var(--ink); }
+.brand h1 { font-size: 23px; letter-spacing: -0.02em; }
+.timer { font-family: var(--font-mono); font-size: 13px; background: var(--chip); border-radius: 999px; padding: 5px 11px; font-variant-numeric: tabular-nums; }
+
+/* Panneaux */
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 14px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink2); }
+.lead { color: var(--ink2); max-width: 62ch; }
+.view h2 { font-size: 22px; }
+.view { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+/* Colonnes de la vue Cartes : de l'air entre les blocs */
+.col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.col > h2 { margin-bottom: -8px; }
+.col .panel { gap: 14px; }
+#view-cartes { gap: 28px; }
+#codeForm .row { flex-wrap: nowrap; }
+
+/* Contrôles */
+.seg { display: flex; gap: 4px; background: var(--chip); border-radius: 12px; padding: 4px; }
+.seg button { flex: 1; min-width: 0; border: 0; background: transparent; border-radius: 9px; padding: 9px 4px; font-weight: 600; font-size: 14px; color: var(--ink2); }
+.seg button[aria-checked="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 3px rgba(20, 33, 61, 0.2); }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.btn { border: 1.5px solid var(--ink); background: transparent; border-radius: 12px; padding: 12px 16px; font-weight: 700; font-size: 15px; min-height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.small { min-height: 40px; padding: 8px 12px; font-size: 14px; }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn.ghost { border-color: var(--line); color: var(--ink); background: var(--paper); }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.row > * { flex: 1 1 auto; }
+input[type="text"] { width: 100%; min-width: 0; font: 500 16px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; background: var(--bg); border: 1.5px solid var(--line); color: var(--ink); border-radius: 12px; padding: 11px 12px; }
+
+/* Plateau : plan de maison vu de dessus, chaque pièce a son sol */
+.boardwrap { container-type: inline-size; width: 100%; }
+.board { --n: 6; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); width: 100%; background: var(--paper); border-radius: 12px; padding: 6px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+.cell { overflow: visible; position: relative; aspect-ratio: 1; display: grid; place-items: center; padding: 0; border: 1px solid var(--cell-line); background: transparent; color: inherit; border-radius: 0; }
+.cell::before { content: ''; position: absolute; inset: 0; background-color: var(--a); filter: var(--floor-filter); pointer-events: none; }
+.cell.wt { border-top: 3px solid var(--wall); } .cell.wl { border-left: 3px solid var(--wall); }
+.cell.wb { border-bottom: 3px solid var(--wall); } .cell.wr { border-right: 3px solid var(--wall); }
+.pt-checker::before { background-image: conic-gradient(var(--b) 25%, transparent 0 50%, var(--b) 0 75%, transparent 0); }
+.pt-planks::before { background-image: linear-gradient(var(--b) 1.5px, transparent 1.5px), linear-gradient(90deg, transparent 47%, var(--b) 47% calc(47% + 1.5px), transparent 0); background-size: 100% 25%, 100% 50%; }
+.pt-paving::before { background-image: linear-gradient(var(--b) 1.5px, transparent 1.5px), linear-gradient(90deg, var(--b) 1.5px, transparent 1.5px); background-size: 100% 50%, 50% 100%; }
+.pt-bricks::before { background-image: linear-gradient(var(--b) 2px, transparent 2px), linear-gradient(90deg, var(--b) 2px, transparent 2px); background-size: 100% 33.4%, 50% 100%; }
+.pt-carpet::before { background-image: radial-gradient(var(--b) 1.5px, transparent 1.9px), radial-gradient(var(--b) 1.5px, transparent 1.9px); background-size: 25% 25%, 25% 25%; background-position: 0 0, 12.5% 12.5%; }
+.pt-grass::before { background-image: radial-gradient(circle at 25% 30%, var(--b) 0 1.6px, transparent 2.2px), radial-gradient(circle at 72% 68%, var(--b) 0 1.6px, transparent 2.2px), radial-gradient(circle at 80% 18%, var(--b) 0 1.2px, transparent 1.8px); }
+.pt-felt::before { background-image: repeating-linear-gradient(45deg, var(--b) 0 1px, transparent 1px 7px); }
+.pt-stripes::before { background-image: repeating-linear-gradient(90deg, transparent 0 25%, var(--b) 25% 50%); }
+.pt-diamond::before { background-image: repeating-linear-gradient(45deg, var(--b) 0 1.2px, transparent 1.2px 9px), repeating-linear-gradient(-45deg, var(--b) 0 1.2px, transparent 1.2px 9px); }
+.pt-speckle::before { background-image: radial-gradient(var(--b) 1px, transparent 1.5px), radial-gradient(var(--b) 1px, transparent 1.5px); background-size: 19% 19%, 27% 27%; background-position: 0 0, 9% 13%; }
+.r0 { --a: var(--a0); --b: var(--b0); } .r1 { --a: var(--a1); --b: var(--b1); } .r2 { --a: var(--a2); --b: var(--b2); } .r3 { --a: var(--a3); --b: var(--b3); }
+.r4 { --a: var(--a4); --b: var(--b4); } .r5 { --a: var(--a5); --b: var(--b5); } .r6 { --a: var(--a6); --b: var(--b6); } .r7 { --a: var(--a7); --b: var(--b7); }
+.cell.blocked { cursor: not-allowed; }
+.cell.blocked::after { content: ''; position: absolute; inset: 0; background: rgba(46, 36, 25, 0.12); pointer-events: none; }
+.cell.seat::after { content: ''; position: absolute; inset: 7%; border: 1.5px dashed rgba(255, 255, 255, 0.95); border-radius: 18%; pointer-events: none; z-index: 1; }
+.cell .obj { width: 88%; height: 88%; position: relative; z-index: 1; filter: var(--obj-filter) drop-shadow(0 1px 1px rgba(46, 36, 25, 0.3)); pointer-events: none; }
+.cell.seat .obj { width: 78%; height: 78%; }
+.cell.has-tok .obj { position: absolute; right: 2%; bottom: 2%; width: 46%; height: 46%; opacity: 0.95; }
+.cell.dim::before { filter: var(--dim-filter); }
+.cell.dim .obj { opacity: 0.5; filter: grayscale(0.85) drop-shadow(0 1px 1px rgba(46, 36, 25, 0.2)); }
+.cell.cand { outline: 3px solid var(--accent); outline-offset: -3px; z-index: 1; }
+.cell .x { position: absolute; width: 74%; height: 74%; z-index: 4; pointer-events: none; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.45)); }
+.x path { fill: none; stroke-linecap: round; }
+.x .o { stroke: #fff; stroke-width: 7; }
+.x .i { stroke: var(--cross); stroke-width: 3.8; }
+.cell .x.auto { width: 34%; height: 34%; opacity: 0.85; filter: none; }
+.x.auto .o { stroke: rgba(255, 255, 255, 0.9); stroke-width: 6.5; }
+.x.auto .i { stroke: #4a5266; stroke-width: 3.6; }
+.cell.crossed::before { opacity: 0.55; }
+.cell.crossed .obj { opacity: 0.6; }
+.notes { position: absolute; left: 1px; right: 1px; bottom: 1px; z-index: 4; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-end; gap: 1px; pointer-events: none; }
+.nt { width: calc(27cqw / var(--n)); height: calc(27cqw / var(--n)); border-radius: 50%; background: var(--pc); color: #fff; display: grid; place-items: center; font: 800 calc(16cqw / var(--n)) var(--font-display); border: 1px solid #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); }
+.nt.me { box-shadow: 0 0 0 2px var(--accent), 0 1px 2px rgba(0, 0, 0, 0.4); }
+.cell .rl { position: absolute; top: 2px; left: 2px; z-index: 5; pointer-events: none; font-family: var(--font-body); font-weight: 700; line-height: 1.3; letter-spacing: 0.01em; white-space: nowrap; background: var(--tag-bg); color: var(--tag-fg); border-radius: 999px; padding: 0 0.45em; box-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.25); }
+@keyframes shake { 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+.tok { display: grid; place-items: center; border-radius: 50%; background: var(--pc); color: #fff; font-family: var(--font-display); font-weight: 800; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); position: relative; z-index: 3; }
+.tok.vic { color: var(--paper); }
+.board .tok { width: calc(66cqw / var(--n)); height: calc(66cqw / var(--n)); font-size: calc(34cqw / var(--n)); margin-top: 8%; }
+.tok.big { width: 46px; height: 46px; font-size: 20px; }
+.tok.mid { width: 34px; height: 34px; font-size: 15px; }
+.tok.bad { box-shadow: 0 0 0 3px var(--bad); }
+.tok.sel { box-shadow: 0 0 0 3px var(--accent); }
+.tok.kill { box-shadow: 0 0 0 3px var(--accent), 0 0 0 6px var(--paper), 0 0 0 8px var(--accent); }
+.p0 { --pc: var(--p0); } .p1 { --pc: var(--p1); } .p2 { --pc: var(--p2); } .p3 { --pc: var(--p3); } .p4 { --pc: var(--p4); }
+.p5 { --pc: var(--p5); } .p6 { --pc: var(--p6); } .p7 { --pc: var(--p7); } .p8 { --pc: var(--p8); }
+
+/* Fenêtres et portes dessinées sur les murs */
+.win, .door { position: absolute; z-index: 6; pointer-events: none; }
+.win { background: linear-gradient(#e8f6ff, #8fd0f2); border: 1.5px solid #27506b; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6); }
+.win-t, .win-b { left: 20%; width: 60%; height: 7px; } .win-t { top: -4px; } .win-b { bottom: -4px; }
+.win-l, .win-r { top: 20%; height: 60%; width: 7px; } .win-l { left: -4px; } .win-r { right: -4px; }
+.door { background: #d9a35f; border: 1.5px solid #5b3d1f; border-radius: 2px; }
+.door-r { right: -6px; width: 11px; top: 24%; height: 52%; }
+.door-b { bottom: -6px; height: 11px; left: 24%; width: 52%; }
+.demo { display: inline-block; flex: none; }
+.demo.win { position: static; width: 26px; height: 10px; } .demo.door { position: static; width: 12px; height: 24px; }
+.cell.hl { outline: 2px solid var(--accent); outline-offset: -2px; z-index: 1; }
+.cell.tgt { outline: 4px solid var(--accent); outline-offset: -4px; z-index: 2; box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 40%, transparent); }
+@keyframes pulse { 50% { outline-color: color-mix(in srgb, var(--accent) 25%, transparent); box-shadow: 0 0 0 4px transparent; } }
+.ctl .seg button { padding: 9px 6px; font-size: 13.5px; }
+.ctl .ib { padding: 8px 10px; }
+#tutoPanel.done { order: 20; }
+.coach { border: 2px solid var(--accent); border-radius: 14px; background: var(--paper); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.coach .lbl { color: var(--accent); }
+.coach p { font-size: 14.5px; line-height: 1.4; }
+.coach .cl { font-size: 13.5px; color: var(--ink2); }
+.coach .row { gap: 6px; }
+.seg.wrap { display: grid; grid-template-columns: repeat(3, 1fr); }
+.opt { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; width: 100%; text-align: left; border: 0; background: transparent; padding: 4px 0; }
+.opt .tg { width: 40px; height: 24px; border-radius: 999px; background: var(--line); position: relative; flex: none; transition: background 0.15s; }
+.opt .tg::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--paper); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); transition: transform 0.15s; }
+.opt[aria-pressed="true"] .tg { background: var(--good); }
+.opt[aria-pressed="true"] .tg::after { transform: translateX(16px); }
+.opt .tx { display: flex; flex-direction: column; gap: 2px; }
+.opt .tx b { font-size: 14.5px; } .opt .tx small { font-size: 12.5px; color: var(--ink2); line-height: 1.35; }
+.story { font-size: 14px; line-height: 1.4; color: var(--ink2); font-style: italic; }
+.jb { color: var(--ink2); font-size: 12.5px; }
+.bio-t { margin-left: auto; border: 1.5px solid var(--line); background: var(--paper); border-radius: 999px; padding: 3px 11px; font-size: 12.5px; font-weight: 600; }
+.bio-t[aria-pressed="true"] { background: var(--chip); }
+.pcard .bio { font-size: 12.5px; color: var(--ink2); font-style: italic; line-height: 1.35; }
+.reason { gap: 10px; }
+.reason ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.rstep { width: 100%; text-align: left; border: 1.5px solid var(--line); background: var(--paper); border-radius: 12px; padding: 9px 11px; display: flex; flex-direction: column; gap: 3px; }
+.rstep b { font-family: var(--font-display); font-size: 15px; }
+.rstep small { font-size: 13px; color: var(--ink2); line-height: 1.35; }
+.rstep .tgl { align-self: flex-start; font: 600 10.5px var(--font-mono); letter-spacing: 0.04em; background: var(--chip); color: var(--ink2); border-radius: 999px; padding: 2px 8px; }
+.rstep[aria-current="step"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.rstep.future { opacity: 0.55; }
+.reason .row { gap: 6px; }
+
+/* Barre d'outils */
+.tools { display: flex; flex-direction: column; gap: 10px; }
+.tools .seg { flex: 0 0 auto; }
+.msg { min-height: 32px; display: flex; align-items: center; font-size: 13.5px; line-height: 1.3; background: var(--chip); border-radius: 10px; padding: 5px 10px; }
+.msg.warn { background: color-mix(in srgb, var(--bad) 16%, var(--paper)); }
+.msg.good { background: color-mix(in srgb, var(--good) 18%, var(--paper)); }
+.aids { display: flex; flex-direction: column; gap: 4px; }
+.aid { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; width: 100%; text-align: left; border: 0; background: transparent; padding: 8px 2px; border-top: 1px solid var(--line); border-radius: 0; }
+.aid:first-of-type { border-top: 0; }
+.aid .tg { width: 40px; height: 24px; border-radius: 999px; background: var(--line); position: relative; transition: background 0.15s; flex: none; }
+.aid .tg::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--paper); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); transition: transform 0.15s; }
+.aid[aria-pressed="true"] .tg { background: var(--good); }
+.aid[aria-pressed="true"] .tg::after { transform: translateX(16px); }
+.aid .tx { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.aid .tx b { font-size: 14.5px; }
+.aid .tx small { font-size: 12.5px; color: var(--ink2); line-height: 1.35; }
+
+/* Suspects */
+.strip { display: flex; gap: 2px; overflow-x: auto; padding: 2px 0; scroll-snap-type: x proximity; scrollbar-width: none; }
+.strip::-webkit-scrollbar { display: none; }
+.person { flex: 1 0 auto; min-width: 54px; display: flex; flex-direction: column; align-items: center; gap: 2px; border: 0; background: transparent; padding: 4px 2px; scroll-snap-align: start; border-radius: 10px; }
+.person .nm { font-size: 11.5px; font-weight: 600; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.person[aria-pressed="true"] { background: var(--chip); }
+.person.placed .tok::after { content: '✓'; position: absolute; right: -4px; bottom: -4px; width: 16px; height: 16px; border-radius: 50%; background: var(--good); color: #fff; font: 800 10px var(--font-body); display: grid; place-items: center; border: 1.5px solid var(--paper); }
+.tok.sm { width: 38px; height: 38px; font-size: 17px; }
+.dossier { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; }
+.dossier .who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
+.dossier .who b { font-family: var(--font-display); font-size: 17px; }
+.dossier .who span { color: var(--ink2); font-size: 13px; }
+.vnote { font-size: 14px; color: var(--ink2); line-height: 1.35; }
+#view-play { gap: 8px; }
+.meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.meta .mi { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.meta .code { font-size: 15px; font-weight: 600; letter-spacing: 0.05em; }
+.meta .sub { font-size: 12.5px; color: var(--ink2); }
+.ctl { gap: 8px; flex-wrap: nowrap; }
+.meta .btn.small, .ctl .btn.small { min-height: 38px; }
+.clues { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.clues li { display: flex; gap: 8px; align-items: flex-start; font-size: 14.5px; font-weight: 500; line-height: 1.3; }
+.clues .ic { flex: 0 0 20px; height: 20px; margin-top: 1px; border-radius: 6px; display: grid; place-items: center; font: 700 12px var(--font-mono); background: var(--chip); color: var(--ink2); }
+.clues li.ok .ic { background: var(--good); color: #fff; }
+.clues li.ko .ic { background: var(--bad); color: #fff; }
+.clues li.ko { text-decoration: line-through; text-decoration-color: var(--bad); }
+.gen-note { font-size: 14px; color: var(--ink2); }
+
+/* Résultat */
+.verdict { border: 2px solid var(--accent); border-radius: 14px; padding: 14px; background: var(--paper); display: flex; flex-direction: column; gap: 10px; }
+.stamp { display: inline-block; align-self: flex-start; font: 800 17px var(--font-display); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); border: 3px solid var(--accent); border-radius: 8px; padding: 4px 12px; transform: rotate(-4deg); }
+@keyframes stamp { from { transform: rotate(-12deg) scale(1.8); opacity: 0; } to { transform: rotate(-4deg) scale(1); opacity: 1; } }
+
+/* Cartes (collection) */
+.card-row { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center; width: 100%; text-align: left; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+.card-row[aria-current="true"] { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+.card-row .mini { width: 52px; height: 52px; border-radius: 10px; background: var(--chip); display: grid; place-items: center; font: 600 14px var(--font-mono); }
+.card-row .info { display: flex; flex-direction: column; min-width: 0; }
+.card-row .code { font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.04em; }
+.card-row small { color: var(--ink2); font-size: 12.5px; }
+.badge { font: 600 11px var(--font-mono); letter-spacing: 0.04em; border-radius: 999px; padding: 4px 9px; background: var(--chip); color: var(--ink2); white-space: nowrap; }
+.badge.solved { background: var(--good); color: #fff; }
+.badge.playing { background: var(--ink); color: var(--paper); }
+.list { display: flex; flex-direction: column; gap: 8px; }
+.empty { border: 1.5px dashed var(--line); border-radius: 14px; padding: 18px; color: var(--ink2); text-align: center; }
+
+/* Règles */
+.rules ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 8px 8px 0; border-top: 1px solid var(--line); vertical-align: top; }
+th { font: 500 11px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink2); border-top: 0; }
+.objs { display: flex; flex-wrap: wrap; gap: 8px; }
+.objs span { background: var(--chip); border-radius: 999px; padding: 4px 11px 4px 5px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+.objs svg { width: 26px; height: 26px; }
+
+/* Glossaire */
+.gl { display: flex; flex-direction: column; gap: 14px; }
+.gl section { display: flex; flex-direction: column; gap: 6px; }
+.gl h3 { font-size: 16px; }
+.gl p { font-size: 13.5px; color: var(--ink2); line-height: 1.4; }
+.gl .items { display: flex; flex-wrap: wrap; gap: 6px; }
+.gl .it { display: inline-flex; align-items: center; gap: 6px; background: var(--chip); border-radius: 999px; padding: 3px 11px 3px 4px; font-size: 13.5px; font-weight: 600; }
+.gl .it svg { width: 28px; height: 28px; }
+.gl .it.here { box-shadow: 0 0 0 2px var(--good); }
+.gl .rooms2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 10px; }
+.gl .rm { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; min-width: 0; }
+.swatch { position: relative; width: 26px; height: 26px; flex: none; border-radius: 6px; overflow: hidden; border: 1.5px solid var(--wall); }
+.swatch::before { content: ''; position: absolute; inset: 0; background-color: var(--a); filter: var(--floor-filter); }
+.gl .tag { font: 600 10.5px var(--font-mono); background: var(--good); color: #fff; border-radius: 999px; padding: 1px 7px; margin-left: 4px; }
+.meta .row2 { display: flex; gap: 6px; flex: none; }
+.meta .row2 .btn.small { padding: 8px 11px; font-size: 13.5px; }
+
+/* Cartes des suspects (grand écran) */
+.cards { display: none; }
+.pcard { display: flex; flex-direction: column; gap: 8px; background: var(--paper); border: 1.5px solid var(--line); border-radius: 14px; padding: 12px; box-shadow: var(--shadow); cursor: pointer; min-width: 0; }
+.pcard:hover { border-color: var(--ink2); }
+.pcard[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), var(--shadow); }
+.pcard header { display: flex; align-items: center; gap: 10px; }
+.pcard h3 { font-size: 17px; }
+.pcard .stt { font-size: 12.5px; color: var(--ink2); }
+.pcard.placed .stt { color: var(--good); font-weight: 600; }
+.pcard .cl { display: flex; flex-direction: column; gap: 4px; }
+.pcard .cl span { font-size: 14px; font-weight: 500; line-height: 1.3; display: flex; gap: 6px; }
+.pcard .cl span.ko { text-decoration: line-through; text-decoration-color: var(--bad); color: var(--ink2); }
+.pcard .cl span.muted { color: var(--ink2); font-style: italic; font-weight: 400; }
+.pcard .cl i { font-style: normal; flex: none; width: 16px; text-align: center; font-weight: 800; }
+.pcard .cl .ok i { color: var(--good); } .pcard .cl .ko i { color: var(--bad); }
+
+/* Ordre des blocs : sur téléphone une seule colonne, sur grand écran deux colonnes */
+.pl-left, .pl-right { display: contents; }
+.hintrow { order: 1; } .aids { order: 2; }
+
+/* Barre d'onglets */
+.tabbar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper); border-top: 1px solid var(--line); padding: 6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px)); z-index: 20; }
+.tabbar nav { max-width: 560px; margin: 0 auto; display: flex; gap: 4px; }
+.tabbar button { flex: 1; border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0; font-size: 12px; font-weight: 600; color: var(--ink2); border-radius: 10px; min-height: 52px; }
+.tabbar button svg { width: 24px; height: 24px; }
+.tabbar button[aria-current="page"] { color: var(--ink); }
+.tabbar button[aria-current="page"] svg { color: var(--accent); }
+
+/* Feuille modale et toast */
+.backdrop { position: fixed; inset: 0; background: rgba(8, 14, 28, 0.55); z-index: 40; display: flex; align-items: flex-end; justify-content: center; }
+.sheet { width: 100%; max-width: 560px; background: var(--paper); border-radius: 20px 20px 0 0; padding: 18px 18px calc(18px + env(safe-area-inset-bottom, 0px)); padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 14px; max-height: 88%; overflow-y: auto; }
+@keyframes rise { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sheet h2 { font-size: 22px; }
+.pickgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+.pick { border: 1.5px solid var(--line); background: var(--paper); border-radius: 12px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; }
+.stats { display: flex; gap: 8px; flex-wrap: wrap; }
+.stats span { background: var(--chip); border-radius: 10px; padding: 8px 12px; font: 500 13px var(--font-mono); font-variant-numeric: tabular-nums; }
+.toast { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--paper); border-radius: 12px; padding: 10px 16px; font-size: 14px; font-weight: 600; z-index: 60; max-width: min(92vw, 420px); text-align: center; }
+.codefield { font: 600 16px var(--font-mono); letter-spacing: 0.08em; user-select: all; -webkit-user-select: all; background: var(--bg); border-radius: 10px; padding: 10px 12px; border: 1.5px dashed var(--line); }
+
+/* ===== Animations =====
+   Chaque effet se coupe séparément dans les réglages. Elles restent actives même si l'appareil demande de réduire les animations.
+   Effets ponctuels : la classe n'est ajoutée par le script que si l'animation est activée.
+   Effets continus : ils dépendent d'une classe an-* posée sur <body>. */
+.cell { overflow: visible; }
+.ripple { position: absolute; inset: 18%; border: 3px solid var(--accent); border-radius: 50%; z-index: 2; pointer-events: none; animation: ripple 0.6s ease-out both; }
+@keyframes ripple { from { transform: scale(0.3); opacity: 0.9; } to { transform: scale(1.8); opacity: 0; } }
+.tok.fx-drop { animation: drop 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) both; }
+@keyframes drop { 0% { transform: translateY(-150%) scale(1.3); opacity: 0; } 50% { opacity: 1; } 75% { transform: translateY(5%) scale(0.96); } 100% { transform: none; opacity: 1; } }
+.ghost-tok { position: absolute !important; left: 50%; top: 50%; translate: -50% -50%; z-index: 8 !important; pointer-events: none; animation: ghostOut 0.5s ease-in forwards; }
+@keyframes ghostOut { to { transform: translateY(-80%) scale(0.5); opacity: 0; } }
+.fx-wave .x.auto { animation: crossIn 0.35s cubic-bezier(0.3, 1.6, 0.5, 1) both; animation-delay: var(--d, 0ms); }
+@keyframes crossIn { from { transform: scale(0.1) rotate(-40deg); opacity: 0; } }
+.fx-wave .obj { animation: objDim 0.5s ease both; animation-delay: var(--d, 0ms); }
+@keyframes objDim { from { opacity: 1; filter: none; } }
+.x.draw path { stroke-dasharray: 22; stroke-dashoffset: 22; animation: dash 0.28s ease-out forwards; }
+.x.draw .i { animation-delay: 0.04s; }
+@keyframes dash { to { stroke-dashoffset: 0; } }
+.notes.pop .nt { animation: popIn 0.35s cubic-bezier(0.3, 1.8, 0.5, 1) both; }
+@keyframes popIn { from { transform: scale(0.2); opacity: 0; } }
+.cell.fx-shake { animation: shake 0.45s; }
+.cell.fx-shake .obj { animation: wobble 0.45s; }
+@keyframes wobble { 20% { transform: rotate(-8deg); } 50% { transform: rotate(7deg); } 80% { transform: rotate(-3deg); } }
+.an-verify .cell.flash { animation: shake 0.4s; }
+.an-conflict .tok.bad { animation: pulseRed 0.9s ease-in-out 3; }
+@keyframes pulseRed { 0%, 100% { box-shadow: 0 0 0 3px var(--bad); } 50% { box-shadow: 0 0 0 9px color-mix(in srgb, var(--bad) 30%, transparent); } }
+.halo { position: absolute; inset: 6%; border-radius: 50%; border: 3px solid var(--accent); z-index: 2; pointer-events: none; animation: halo 1.1s ease-out both; }
+@keyframes halo { from { transform: scale(0.5); opacity: 1; } to { transform: scale(2.1); opacity: 0; } }
+.cell.fx-room::before { animation: roomPulse 0.8s ease-out; }
+@keyframes roomPulse { 35% { filter: brightness(1.18) saturate(1.3); } }
+.cell.rmh:not(.dim)::before { filter: saturate(1.35) brightness(1.06); }
+.an-roomhover .cell .obj { transition: transform 0.2s; }
+.an-roomhover .cell.rmh .obj { transform: translateY(-3px) scale(1.06); }
+.fx-hintp .tok { animation: ringPulse 0.9s ease-out 3; }
+@keyframes ringPulse { 0% { box-shadow: 0 0 0 0 rgba(214, 56, 45, 0.75); } 100% { box-shadow: 0 0 0 14px rgba(214, 56, 45, 0); } }
+.an-hint .cell.hl { animation: breathe 1.7s ease-in-out infinite; }
+@keyframes breathe { 50% { outline-color: color-mix(in srgb, var(--accent) 25%, transparent); } }
+.clues li.pop .ic, .pcard .cl span.pop i { animation: popIn 0.45s cubic-bezier(0.3, 1.8, 0.5, 1) both; }
+.clues li.pop > span:last-child, .pcard .cl span.pop > span { animation: slideIn 0.35s ease-out both; }
+@keyframes slideIn { from { transform: translateX(-10px); opacity: 0.2; } }
+.fx-in { animation: fadeUp 0.28s ease-out both; }
+@keyframes fadeUp { from { transform: translateY(8px); opacity: 0; } }
+.person.fx-sel { animation: selIn 0.28s cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes selIn { from { transform: scale(0.82); } }
+.tok.fx-ok { animation: okRing 0.9s ease-out; }
+@keyframes okRing { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--good) 85%, transparent); } 100% { box-shadow: 0 0 0 16px transparent; } }
+.pick.fx-flip { animation: flip 0.45s ease-out both; animation-delay: calc(var(--i, 0) * 70ms); }
+@keyframes flip { from { transform: perspective(400px) rotateY(90deg); opacity: 0; } }
+.pick.wrongpick { animation: shake 0.45s; border-color: var(--bad); background: color-mix(in srgb, var(--bad) 14%, var(--paper)); }
+.pick.wrongpick[disabled] { opacity: 0.7; }
+.an-accuse .stamp { animation: stamp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.3) both; }
+.fx-shock { animation: shock 0.5s ease-out; }
+@keyframes shock { 10% { transform: translate(-5px, 3px); } 30% { transform: translate(5px, -3px); } 50% { transform: translate(-3px, 2px); } 70% { transform: translate(2px, -1px); } }
+.tok.fx-halo { animation: killHalo 1.2s ease-out 3; }
+@keyframes killHalo { 0% { box-shadow: 0 0 0 3px var(--accent), 0 0 0 6px var(--paper), 0 0 0 8px var(--accent); } 50% { box-shadow: 0 0 0 3px var(--accent), 0 0 0 10px color-mix(in srgb, var(--accent) 40%, transparent), 0 0 0 16px transparent; } }
+#fx { position: fixed; inset: 0; pointer-events: none; z-index: 90; overflow: hidden; }
+#fx .cf { position: absolute; top: -16px; left: var(--x); width: 9px; height: 14px; background: var(--c); border-radius: 2px; animation: confetti var(--t) cubic-bezier(0.2, 0.6, 0.4, 1) var(--dl) forwards; }
+@keyframes confetti { to { transform: translate(var(--dx), 108vh) rotate(var(--r)); opacity: 0.9; } }
+.view.view-in { animation: viewIn 0.28s ease-out both; }
+@keyframes viewIn { from { opacity: 0; transform: translateX(var(--dx, 18px)); } }
+.tabbar button { position: relative; }
+.tabbar button::after { content: ''; position: absolute; bottom: 1px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--accent); transform: scale(0); transition: transform 0.3s cubic-bezier(0.3, 1.8, 0.5, 1); }
+.an-tabs .tabbar button[aria-current="page"]::after { transform: scale(1); }
+.an-tabs .tabbar button svg { transition: transform 0.3s cubic-bezier(0.3, 1.8, 0.5, 1); }
+.an-tabs .tabbar button[aria-current="page"] svg { transform: translateY(-2px) scale(1.12); }
+.board.fx-draw .cell::before { animation: floorIn 0.34s cubic-bezier(0.3, 1.4, 0.5, 1) both; animation-delay: calc(var(--i, 0) * var(--stp, 8ms)); }
+.board.fx-draw .cell .rl { animation: labelIn 0.3s ease-out 0.45s both; }
+.board.fx-draw .cell .obj { animation: objIn 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) 0.55s both; }
+@keyframes floorIn { from { transform: scale(0.4); opacity: 0; } }
+@keyframes labelIn { from { opacity: 0; transform: translateY(-4px); } }
+@keyframes objIn { from { transform: scale(0.2) translateY(-30%); opacity: 0; } }
+.spin { display: inline-block; width: 16px; height: 16px; border: 2.5px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.an-sheets .backdrop { animation: fadeIn 0.2s ease-out both; }
+.an-sheets .sheet { animation: spring 0.4s cubic-bezier(0.2, 1.25, 0.3, 1) both; }
+.an-sheets .backdrop.out { animation: fadeOut 0.18s ease-in forwards; }
+.an-sheets .backdrop.out .sheet { animation: sheetOut 0.18s ease-in forwards; }
+@keyframes fadeIn { from { opacity: 0; } }
+@keyframes fadeOut { to { opacity: 0; } }
+@keyframes spring { from { transform: translateY(60px) scale(0.96); opacity: 0; } }
+@keyframes sheetOut { to { transform: translateY(40px); opacity: 0; } }
+.sheet.fx-shock { animation: shock 0.5s ease-out; }
+.btn, .seg button, .person, .aid, .opt, .card-row, .pick { transition: transform 0.12s ease; }
+.an-buttons .btn:active:not(:disabled), .an-buttons .seg button:active, .an-buttons .person:active, .an-buttons .aid:active, .an-buttons .opt:active, .an-buttons .card-row:active, .an-buttons .pick:active { transform: scale(0.96); }
+.an-buttons .aid .tg::after, .an-buttons .opt .tg::after { transition: transform 0.35s cubic-bezier(0.3, 1.8, 0.5, 1); }
+.an-buttons .aid .tg, .an-buttons .opt .tg { transition: background 0.25s; }
+.card-row.fx-rowin { animation: rowIn 0.35s cubic-bezier(0.3, 1.3, 0.5, 1) both; animation-delay: calc(var(--i, 0) * 45ms); }
+@keyframes rowIn { from { transform: translateX(-24px); opacity: 0; } }
+.card-row.fx-fold { animation: fold 0.28s ease-in forwards; animation-delay: calc(var(--i, 0) * 30ms); }
+@keyframes fold { to { transform: scaleY(0.2) translateX(30px); opacity: 0; } }
+.ptr { position: absolute; z-index: 7; pointer-events: none; right: 6%; bottom: -4%; width: 34%; height: 34%; }
+.ptr svg { width: 100%; height: 100%; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.5)); }
+.an-coach .ptr { animation: bounce 0.8s ease-in-out infinite; }
+@keyframes bounce { 50% { transform: translate(-8%, -12%); } }
+.praise { position: fixed; left: 50%; top: 30%; transform: translateX(-50%); z-index: 85; pointer-events: none; font: 800 22px var(--font-display); color: var(--good); background: var(--paper); border: 2.5px solid var(--good); border-radius: 999px; padding: 6px 18px; animation: praise 1.1s ease-out forwards; }
+@keyframes praise { 0% { transform: translate(-50%, 20px) scale(0.6); opacity: 0; } 25% { transform: translate(-50%, 0) scale(1.1); opacity: 1; } 80% { opacity: 1; } 100% { transform: translate(-50%, -30px) scale(1); opacity: 0; } }
+/* ambiance du décor : un effet par lieu, dans la marge autour du plan, derrière lui. Rien ne recouvre les cases. */
+.boardwrap { position: relative; }
+.board { position: relative; z-index: 1; }
+.amb { --m: 22px; position: absolute; inset: calc(var(--m) * -1); z-index: 0; overflow: hidden; pointer-events: none; display: none; }
+.an-ambiance .amb { display: block; }
+.amb i, .amb u, .amb .bx { position: absolute; display: block; text-decoration: none; font-style: normal; }
+.amb .bx { inset: var(--m); }
+.amb .halo { inset: 0; border-radius: 12px; }
+@keyframes amBreathe { 50% { opacity: 0.4; } }
+/* Manoir : orage */
+.amb-M .cloud { left: -10%; right: -10%; top: -20px; height: 34px; background: radial-gradient(ellipse at 50% 100%, rgba(120, 130, 150, 0.5), transparent 70%); filter: blur(6px); animation: amDrift 12s ease-in-out infinite alternate; }
+@keyframes amDrift { to { transform: translateX(30px); } }
+.amb-M .drop { width: 1px; height: 16px; background: linear-gradient(transparent, rgba(150, 185, 235, 0.8)); top: -30px; animation: amFall linear infinite; }
+@keyframes amFall { to { transform: translateY(760px); } }
+.amb-M .flash { inset: 0; background: radial-gradient(ellipse at 50% 30%, rgba(210, 225, 255, 0.85), rgba(120, 150, 255, 0.3) 60%, transparent 80%); opacity: 0; animation: amLightning 7s linear infinite; animation-delay: var(--ph); }
+.amb-M .halo { box-shadow: 0 0 26px 5px rgba(190, 210, 255, 0.9), 0 0 0 2px rgba(255, 255, 255, 0.6); opacity: 0; animation: amLightning 7s linear infinite; animation-delay: var(--ph); }
+@keyframes amLightning { 0%, 38%, 42%, 46%, 100% { opacity: 0; } 39% { opacity: 1; } 40.5% { opacity: 0.15; } 43% { opacity: 0.85; } 44.5% { opacity: 0; } 45% { opacity: 0.5; } }
+/* Casino : symboles de cartes */
+.amb-K .su { font: 700 18px/1 var(--font-display); opacity: 0; bottom: -10px; animation: amRise linear infinite; }
+.amb-K .su.red { color: #ee4a5a; text-shadow: 0 0 8px rgba(255, 70, 90, 0.8); }
+.amb-K .su.blk { color: #e9e4ff; text-shadow: 0 0 8px rgba(150, 140, 255, 0.8); }
+@keyframes amRise { 0% { transform: translateY(0) rotate(0) scale(0.7); opacity: 0; } 12% { opacity: 1; } 50% { transform: translate(var(--sw), -190px) rotate(180deg) scale(1); } 88% { opacity: 1; } 100% { transform: translateY(-420px) rotate(360deg) scale(0.8); opacity: 0; } }
+.amb-K .halo { animation: amHue 6s linear infinite; animation-delay: var(--ph); box-shadow: 0 0 20px 2px #ff5cc0; }
+@keyframes amHue { 0%, 100% { box-shadow: 0 0 20px 2px #ff5cc0; } 33% { box-shadow: 0 0 20px 2px #ffd05c; } 66% { box-shadow: 0 0 20px 2px #6f9bff; } }
+/* Musée : lasers d'alarme */
+.amb-U .ls { background: repeating-linear-gradient(90deg, rgba(255, 60, 60, 0.7) 0 6px, transparent 6px 10px); }
+.amb-U .ls.h { left: 4px; right: 4px; height: 1.5px; }
+.amb-U .ls.v { top: 4px; bottom: 4px; width: 1.5px; background: repeating-linear-gradient(0deg, rgba(255, 60, 60, 0.7) 0 6px, transparent 6px 10px); }
+.amb-U .ls.t { top: -11px; } .amb-U .ls.b { bottom: -11px; } .amb-U .ls.l { left: -11px; } .amb-U .ls.r { right: -11px; }
+.amb-U .dot { width: 8px; height: 8px; border-radius: 50%; background: #ff5050; box-shadow: 0 0 9px 3px rgba(255, 60, 60, 0.9); }
+.amb-U .dot.t, .amb-U .dot.b { left: 0; animation: amSweepX 3.4s ease-in-out infinite alternate; }
+.amb-U .dot.t { top: -15px; } .amb-U .dot.b { bottom: -15px; animation-direction: alternate-reverse; }
+.amb-U .dot.l, .amb-U .dot.r { top: 0; animation: amSweepY 4.2s ease-in-out infinite alternate; }
+.amb-U .dot.l { left: -15px; } .amb-U .dot.r { right: -15px; animation-direction: alternate-reverse; }
+@keyframes amSweepX { to { transform: translateX(calc(100cqw - 12px)); } }
+@keyframes amSweepY { to { transform: translateY(calc(100cqw - 12px)); } }
+.amb-U .halo { box-shadow: 0 0 24px 4px rgba(255, 50, 50, 0.85); opacity: 0; animation: amAlarm 8s linear infinite; animation-delay: var(--ph); }
+@keyframes amAlarm { 0%, 70%, 100% { opacity: 0; } 72%, 78%, 84% { opacity: 1; } 75%, 81% { opacity: 0.1; } }
+/* Paquebot : bulles */
+.amb-P .bb { border-radius: 50%; border: 1.5px solid rgba(180, 225, 255, 0.9); background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(150, 210, 255, 0.15) 60%); bottom: -20px; animation: amBub linear infinite; }
+@keyframes amBub { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 1; } 50% { transform: translate(var(--sw), -220px); } 100% { transform: translate(calc(var(--sw) * -1), -480px); opacity: 0; } }
+.amb-P .halo { box-shadow: 0 0 22px 3px rgba(80, 190, 255, 0.55); animation: amBreathe 4s ease-in-out infinite; animation-delay: var(--ph); }
+/* Hôpital : électrocardiogramme */
+.amb-H .ecg { left: 0; width: 100%; height: 16px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='26'%3E%3Cpath d='M0 13 H34 L40 13 L44 5 L50 23 L55 2 L60 16 L64 13 H120' fill='none' stroke='%232fdc8f' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E") 0 0 / 74px 16px repeat-x; filter: drop-shadow(0 0 4px rgba(47, 220, 143, 0.9)); animation: amEcg 2.4s linear infinite; }
+.amb-H .ecg.t { top: 3px; } .amb-H .ecg.b { bottom: 3px; }
+@keyframes amEcg { to { background-position-x: -74px; } }
+.amb-H .halo { box-shadow: 0 0 20px 2px rgba(47, 220, 143, 0.55); animation: amBeat 1.7s ease-in-out infinite; animation-delay: var(--ph); }
+@keyframes amBeat { 0%, 52%, 100% { opacity: 0.25; } 10% { opacity: 1; } 20% { opacity: 0.4; } 30% { opacity: 0.9; } 44% { opacity: 0.3; } }
+/* Campus : feuilles d'automne */
+.amb-C .lf { width: 13px; height: 9px; border-radius: 0 80% 0 80%; top: -20px; opacity: 0; animation: amLeaf linear infinite; }
+@keyframes amLeaf { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 8% { opacity: 1; } 50% { transform: translate(var(--sw), 220px) rotate(200deg); } 92% { opacity: 1; } 100% { transform: translate(calc(var(--sw) * -0.6), 470px) rotate(420deg); opacity: 0; } }
+.amb-C .halo { box-shadow: 0 0 22px 2px rgba(140, 200, 80, 0.5); animation: amBreathe 7s ease-in-out infinite; animation-delay: var(--ph); }
+.an-windows .win { overflow: hidden; }
+.an-windows .win::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.95) 50%, transparent 62%); transform: translateX(-130%); animation: shine 7s ease-in-out infinite; animation-delay: var(--ds, 0s); }
+@keyframes shine { 0%, 70% { transform: translateX(-130%); } 100% { transform: translateX(130%); } }
+.an-daily #daily { position: relative; overflow: hidden; }
+.an-daily #daily::after { content: ''; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; background: linear-gradient(105deg, transparent, color-mix(in srgb, var(--accent) 14%, white 20%), transparent); transform: skewX(-14deg); animation: dailyShine 6.5s ease-in-out infinite; pointer-events: none; }
+@keyframes dailyShine { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+.streak { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; }
+.flame { width: 20px; height: 24px; transform-origin: 50% 90%; }
+.an-daily .flame { animation: flame 1.1s ease-in-out infinite alternate; }
+@keyframes flame { from { transform: scale(1, 1) rotate(-3deg); } to { transform: scale(0.93, 1.1) rotate(3deg); } }
+.spin-wrap { display: inline-flex; align-items: center; gap: 8px; }
+.animlist { display: flex; flex-direction: column; gap: 4px; }
+.animlist h3 { font-size: 15px; margin-top: 8px; }
+@media (min-width: 700px) { body { font-size: 16px; } }
+
+/* Grand écran : plan fixe à gauche, suspects en cartes à droite */
+@media (min-width: 900px) {
+  .app { max-width: 1240px; gap: 14px; padding-block: 14px 100px; }
+  .brand h1 { font-size: 28px; } .brand svg { width: 32px; height: 32px; }
+  body { padding-left: max(28px, env(safe-area-inset-left, 0px)); padding-right: max(28px, env(safe-area-inset-right, 0px)); }
+  #view-play { display: grid; grid-template-columns: minmax(380px, 640px) minmax(0, 1fr); gap: 20px 28px; align-items: start; }
+  .pl-left, .pl-right { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .pl-left { position: sticky; top: 12px; }
+  .boardwrap { width: min(100%, max(360px, calc(100vh - 350px))); margin-inline: auto; }
+  .strip, .dossier { display: none; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; order: -1; }
+  .hintrow { order: 0; }
+  .aids { order: 3; }
+  #view-cartes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+  .rules { display: block; columns: 2; column-gap: 24px; }
+  .rules > * { break-inside: avoid; margin-bottom: 14px; }
+  .rules > h2 { column-span: all; }
+  .backdrop { align-items: center; }
+  .sheet { border-radius: 20px; max-height: 84vh; max-width: 620px; }
+  .tabbar nav { max-width: 640px; }
+}
+@media (min-width: 900px) and (max-width: 1099px) { #view-play { grid-template-columns: minmax(360px, 500px) minmax(0, 1fr); } .cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="26" height="26" rx="4"/><path d="M12 3v26M3 12h26M3 21h26" opacity=".45"/><circle cx="21" cy="21" r="4.5" fill="var(--accent)" stroke="var(--accent)"/></svg>
+      <h1>Alibi</h1>
+    </div>
+    <div class="timer" id="timer" hidden aria-label="Temps écoulé">00:00</div>
+  </header>
+
+  <main>
+    <section class="view" id="view-cartes" hidden>
+     <div class="col">
+      <div class="panel" id="tutoPanel"></div>
+      <h2>Nouvelle carte</h2>
+      <p class="lead">Chaque carte est générée sur votre téléphone, avec une seule solution possible. Le même code redonne toujours la même carte.</p>
+      <div class="panel">
+        <div class="field"><span class="lbl" id="lblN">Taille de la grille</span><div class="seg" role="radiogroup" aria-labelledby="lblN" id="segN"></div></div>
+        <div class="field"><span class="lbl" id="lblD">Niveau</span><div class="seg" role="radiogroup" aria-labelledby="lblD" id="segD"></div></div>
+        <button class="opt" data-act="setMeasured" id="optMeasured" aria-pressed="false"><span class="tg" aria-hidden="true"></span><span class="tx"><b>Difficulté mesurée</b><small id="measuredNote"></small></span></button>
+        <div class="field"><span class="lbl" id="lblT">Décor</span><div class="seg wrap" role="radiogroup" aria-labelledby="lblT" id="segT"></div></div>
+        <p class="gen-note" id="genNote"></p>
+        <button class="btn primary" data-act="gen" id="btnGen">Générer une carte</button>
+      </div>
+      <div class="panel" id="daily"></div>
+      <form class="panel" id="codeForm" autocomplete="off">
+        <label class="lbl" for="codeInput">Ouvrir une carte avec son code</label>
+        <div class="row">
+          <input type="text" id="codeInput" inputmode="text" autocapitalize="characters" spellcheck="false" placeholder="62M-K7QX2P" maxlength="12" aria-describedby="codeErr">
+          <button class="btn ghost" type="submit" style="flex:0 0 auto">Ouvrir</button>
+        </div>
+        <p class="gen-note" id="codeErr" aria-live="polite"></p>
+      </form>
+     </div>
+     <div class="col">
+      <h2>Vos cartes</h2>
+      <div class="list" id="list"></div>
+      <div id="histTools"></div>
+      <div class="panel"><span class="lbl">Animations</span><p class="gen-note">Chaque effet (pose des jetons, confettis, ambiance des décors…) s’active ou se coupe séparément.</p><button class="btn ghost" data-act="animSheet">Régler les animations</button></div>
+     </div>
+    </section>
+
+    <section class="view" id="view-play" hidden></section>
+
+    <section class="view rules" id="view-regles" hidden></section>
+  </main>
+</div>
+
+<div class="tabbar">
+  <nav aria-label="Navigation principale">
+    <button data-act="tab" data-tab="cartes" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></svg>Cartes</button>
+    <button data-act="tab" data-tab="play" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>Enquête</button>
+    <button data-act="tab" data-tab="regles" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M5 17a3 3 0 013-3h11"/></svg>Règles</button>
+  </nav>
+</div>
+<div id="layer"></div>
+<div id="fx" aria-hidden="true"></div>
+
+<script>
+/* ===== Moteur Alibi : génération de cartes d'enquête à solution unique ===== */
+const TYPES = {
+  plante:   { name: 'plante',     art: 'une', emoji: '🌿', occ: false },
+  lampe:    { name: 'lampe',      art: 'une', emoji: '💡', occ: false },
+  etagere:  { name: 'étagère',    art: 'une', emoji: '📚', occ: false },
+  tele:     { name: 'télévision', art: 'une', emoji: '📺', occ: false },
+  table:    { name: 'table',      art: 'une', emoji: '🍽️', occ: false },
+  piano:    { name: 'piano',      art: 'un',  emoji: '🎹', occ: false },
+  voiture:  { name: 'voiture',    art: 'une', emoji: '🚗', occ: false },
+  aquarium: { name: 'aquarium',   art: 'un',  emoji: '🐠', occ: false },
+  statue:   { name: 'statue',     art: 'une', emoji: '🗿', occ: false },
+  horloge:  { name: 'horloge',    art: 'une', emoji: '🕰️', occ: false },
+  cactus:   { name: 'cactus',     art: 'un',  emoji: '🌵', occ: false },
+  bar:      { name: 'bar',        art: 'un',  emoji: '🍸', occ: false },
+  malle:    { name: 'malle',      art: 'une', emoji: '🧳', occ: false },
+  chaise:   { name: 'chaise',     art: 'une', emoji: '🪑', occ: true },
+  canape:   { name: 'canapé',     art: 'un',  emoji: '🛋️', occ: true },
+  lit:      { name: 'lit',        art: 'un',  emoji: '🛏️', occ: true }
+};
+const BLOCK_KEYS = Object.keys(TYPES).filter(k => !TYPES[k].occ);
+const OCC_KEYS = Object.keys(TYPES).filter(k => TYPES[k].occ);
+
+const THEMES = {
+  M: { name: 'Manoir', rooms: [['Cuisine', 'dans la cuisine'], ['Salon', 'dans le salon'], ['Bibliothèque', 'dans la bibliothèque'], ['Cave', 'à la cave'], ['Véranda', 'dans la véranda'], ['Chambre', 'dans la chambre'], ['Bureau', 'dans le bureau'], ['Jardin', 'dans le jardin']] },
+  K: { name: 'Casino', rooms: [['Salle de jeu', 'dans la salle de jeu'], ['Bar', 'au bar'], ['Vestiaire', 'au vestiaire'], ['Cuisine', 'en cuisine'], ['Terrasse', 'sur la terrasse'], ['Coffre-fort', 'dans le coffre-fort'], ['Scène', 'sur la scène'], ['Fumoir', 'dans le fumoir']] },
+  U: { name: 'Musée', rooms: [['Hall', 'dans le hall'], ['Galerie', 'dans la galerie'], ['Atelier', 'à l’atelier'], ['Boutique', 'à la boutique'], ['Réserve', 'dans la réserve'], ['Jardin', 'dans le jardin'], ['Café', 'au café'], ['Crypte', 'dans la crypte']] },
+  P: { name: 'Paquebot', rooms: [['Pont', 'sur le pont'], ['Cabine', 'dans la cabine'], ['Salle des machines', 'dans la salle des machines'], ['Cuisine', 'en cuisine'], ['Salle de bal', 'dans la salle de bal'], ['Infirmerie', 'à l’infirmerie'], ['Passerelle', 'sur la passerelle'], ['Cale', 'dans la cale']] },
+  H: { name: 'Hôpital', rooms: [['Accueil', 'à l’accueil'], ['Urgences', 'aux urgences'], ['Bloc opératoire', 'au bloc opératoire'], ['Pharmacie', 'à la pharmacie'], ['Chambre', 'dans la chambre'], ['Laboratoire', 'au laboratoire'], ['Cafétéria', 'à la cafétéria'], ['Radiologie', 'en radiologie']] },
+  C: { name: 'Campus', rooms: [['Amphithéâtre', 'dans l’amphithéâtre'], ['Bibliothèque', 'à la bibliothèque'], ['Laboratoire', 'au laboratoire'], ['Cafétéria', 'à la cafétéria'], ['Gymnase', 'au gymnase'], ['Résidence', 'à la résidence'], ['Secrétariat', 'au secrétariat'], ['Jardin', 'dans le jardin']] }
+};
+const THEME_KEYS = 'MKUPHC';
+
+/* Un métier par personnage : [masculin, féminin] */
+const JOBS = {
+  M: [['jardinier', 'jardinière'], ['cuisinier', 'cuisinière'], ['majordome', 'gouvernante'], ['notaire', 'notaire'], ['médecin', 'médecin'], ['peintre', 'peintre'], ['chauffeur', 'chauffeuse'], ['écrivain', 'écrivaine'], ['avocat', 'avocate'], ['cousin', 'cousine']],
+  K: [['croupier', 'croupière'], ['barman', 'barmaid'], ['videur', 'videuse'], ['chanteur', 'chanteuse'], ['comptable', 'comptable'], ['magicien', 'magicienne'], ['directeur', 'directrice'], ['serveur', 'serveuse'], ['détective', 'détective'], ['pianiste', 'pianiste']],
+  U: [['gardien', 'gardienne'], ['conservateur', 'conservatrice'], ['guide', 'guide'], ['restaurateur', 'restauratrice'], ['historien', 'historienne'], ['peintre', 'peintre'], ['sculpteur', 'sculptrice'], ['étudiant', 'étudiante'], ['mécène', 'mécène'], ['critique', 'critique']],
+  P: [['capitaine', 'capitaine'], ['mécanicien', 'mécanicienne'], ['cuisinier', 'cuisinière'], ['médecin', 'médecin'], ['pianiste', 'pianiste'], ['steward', 'hôtesse'], ['passager', 'passagère'], ['danseur', 'danseuse'], ['opérateur radio', 'opératrice radio'], ['matelot', 'matelot']],
+  H: [['chirurgien', 'chirurgienne'], ['infirmier', 'infirmière'], ['pharmacien', 'pharmacienne'], ['radiologue', 'radiologue'], ['interne', 'interne'], ['brancardier', 'brancardière'], ['directeur', 'directrice'], ['patient', 'patiente'], ['agent d’accueil', 'agente d’accueil'], ['biologiste', 'biologiste']],
+  C: [['professeur', 'professeure'], ['étudiant', 'étudiante'], ['bibliothécaire', 'bibliothécaire'], ['doyen', 'doyenne'], ['chercheur', 'chercheuse'], ['jardinier', 'jardinière'], ['sportif', 'sportive'], ['secrétaire', 'secrétaire'], ['cuisinier', 'cuisinière'], ['gardien', 'gardienne']]
+};
+/* Début d’histoire : lieu, ambiance */
+const STORIES = {
+  M: { place: 'au manoir', mood: 'L’orage venait de couper le courant.' },
+  K: { place: 'au casino', mood: 'Les lumières venaient de s’éteindre en plein tournoi.' },
+  U: { place: 'au musée', mood: 'Le vernissage battait son plein.' },
+  P: { place: 'à bord du paquebot', mood: 'Le navire fendait la nuit, loin de toute côte.' },
+  H: { place: 'à l’hôpital', mood: 'C’était le service de nuit, couloirs presque vides.' },
+  C: { place: 'sur le campus', mood: 'La soirée de remise des diplômes se terminait.' }
+};
+
+const NAMES = [['Alice', 'F'], ['Bruno', 'M'], ['Chloé', 'F'], ['David', 'M'], ['Emma', 'F'], ['Félix', 'M'], ['Gaëlle', 'F'], ['Hugo', 'M'], ['Inès', 'F'], ['Jules', 'M'], ['Léa', 'F'], ['Marc', 'M'], ['Nora', 'F'], ['Oscar', 'M'], ['Paul', 'M'], ['Rose', 'F'], ['Sacha', 'M'], ['Théo', 'M']];
+
+const SEED_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+const D4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+const UNARY = new Set(['room', 'notroom', 'roomobj', 'on', 'onany', 'beside', 'window', 'door', 'biggest', 'smallest', 'notbeside', 'notonany', 'notroomobj', 'nowindow', 'nodoor']);
+const BINARY = new Set(['nextroom', 'farroom', 'diag', 'bigger', 'smaller']);
+/* Règle : les suspects sont tous dans des pièces différentes (une seule personne par pièce),
+   sauf la pièce de la victime, qui contient aussi le tueur. La victime n'a aucun indice :
+   elle occupe la dernière case libre. Aucun indice ne parle de ligne ni de colonne. */
+const K_BASE = ['room', 'roomobj', 'on', 'onany', 'beside', 'window', 'door'];
+const K_SIZE = ['biggest', 'smallest', 'bigger', 'smaller'];
+const K_NEG = ['notroom', 'farroom', 'notbeside', 'notonany', 'notroomobj', 'nowindow', 'nodoor'];
+/* Niveaux « logique actuelle » (1 à 3) : on ouvre peu à peu de nouveaux types d’indices */
+const ALLOWED = {
+  1: K_BASE,
+  2: K_BASE.concat(['nextroom', 'diag'], K_SIZE),
+  3: K_BASE.concat(['nextroom', 'diag'], K_SIZE, K_NEG)
+};
+/* Niveaux « difficulté mesurée » : le niveau est celui du raisonnement réellement nécessaire */
+const KINDS_MEASURED = {
+  1: K_BASE.concat(['biggest', 'smallest']),
+  2: K_BASE.concat(['biggest', 'smallest', 'nextroom', 'diag', 'bigger', 'smaller']),
+  3: K_BASE.concat(['nextroom', 'diag'], K_SIZE, K_NEG)
+};
+const LEVEL_NAMES = ['', 'Facile', 'Moyen', 'Difficile'];
+const NODE_LIMIT = 120000;
+
+/* ---------- Aléa déterministe ---------- */
+function xmur3(str) {
+  let h = 1779033703 ^ str.length;
+  for (let i = 0; i < str.length; i++) { h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); }
+  return function () { h = Math.imul(h ^ (h >>> 16), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); h ^= h >>> 16; return h >>> 0; };
+}
+function mulberry32(a) {
+  return function () { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+function makeRng(str) {
+  const f = mulberry32(xmur3(str)());
+  const rng = {
+    next: f,
+    int: n => Math.floor(f() * n),
+    chance: p => f() < p,
+    pick: a => a[Math.floor(f() * a.length)],
+    shuffle: a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(f() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  };
+  return rng;
+}
+
+/* ---------- Codes de carte ---------- */
+/* Code : N (4-9), D (1-3 = logique classique, A-C = difficulté mesurée), T (thème), graine */
+function parseCode(raw) {
+  const s = String(raw || '').toUpperCase().replace(/[\s_]/g, '');
+  const m = /^([4-9])([1-3A-C])([MKUPHC])-?([0-9A-Z]{6})$/.exec(s);
+  if (!m) return null;
+  const measured = /[A-C]/.test(m[2]);
+  const D = measured ? 'ABC'.indexOf(m[2]) + 1 : +m[2];
+  return { N: +m[1], D, measured, T: m[3], seed: m[4], code: m[1] + m[2] + m[3] + '-' + m[4] };
+}
+function makeCode(N, D, T, seed, measured) { return N + '' + (measured ? 'ABC'[D - 1] : D) + T + '-' + seed; }
+function randomSeed(rand) { let s = ''; for (let i = 0; i < 6; i++) s += SEED_ALPHABET[Math.floor(rand() * 32)]; return s; }
+function dailyCode(dateStr) {
+  const h = xmur3('alibi-du-jour|' + dateStr);
+  let seed = ''; for (let i = 0; i < 6; i++) seed += SEED_ALPHABET[h() % 32];
+  const t = THEME_KEYS[h() % THEME_KEYS.length];
+  return makeCode(6, 2, t, seed, false);
+}
+
+/* ---------- Évaluation des indices ---------- */
+function rc(puz, cell) { return [(cell / puz.N) | 0, cell % puz.N]; }
+function isBlocked(puz, cell) { const o = puz.objs[cell]; return !!o && !TYPES[o].occ; }
+function besideObj(puz, cell, obj) {
+  const N = puz.N, r = (cell / N) | 0, c = cell % N, rm = puz.roomOf[cell];
+  for (const d of D4) {
+    const rr = r + d[0], cc = c + d[1];
+    if (rr < 0 || cc < 0 || rr >= N || cc >= N) continue;
+    const j = rr * N + cc;
+    if (puz.roomOf[j] === rm && puz.objs[j] === obj) return true;
+  }
+  return false;
+}
+function evalUnary(puz, cl, cell) {
+  switch (cl.kind) {
+    case 'room': return puz.roomOf[cell] === cl.room;
+    case 'notroom': return puz.roomOf[cell] !== cl.room;
+    case 'roomobj': return puz.roomObjs[puz.roomOf[cell]].indexOf(cl.obj) >= 0;
+    case 'on': return puz.objs[cell] === cl.obj;
+    case 'onany': return !!puz.objs[cell] && TYPES[puz.objs[cell]].occ;
+    case 'beside': return besideObj(puz, cell, cl.obj);
+    case 'window': return !!puz.hasWin[cell];
+    case 'door': return !!puz.hasDoor[cell];
+    case 'nowindow': return !puz.hasWin[cell];
+    case 'nodoor': return !puz.hasDoor[cell];
+    case 'biggest': return puz.roomOf[cell] === puz.biggest;
+    case 'smallest': return puz.roomOf[cell] === puz.smallest;
+    case 'notbeside': return !besideObj(puz, cell, cl.obj);
+    case 'notonany': return !(puz.objs[cell] && TYPES[puz.objs[cell]].occ);
+    case 'notroomobj': return puz.roomObjs[puz.roomOf[cell]].indexOf(cl.obj) < 0;
+  }
+  return true;
+}
+function evalBinary(puz, cl, cp, cq) {
+  const N = puz.N, rp = (cp / N) | 0, rq = (cq / N) | 0, cpp = cp % N, cqq = cq % N;
+  switch (cl.kind) {
+    case 'nextroom': return puz.roomAdj[puz.roomOf[cp]][puz.roomOf[cq]];
+    case 'farroom': { const a = puz.roomOf[cp], b = puz.roomOf[cq]; return a !== b && !puz.roomAdj[a][b]; }
+    case 'diag': return Math.abs(rp - rq) === 1 && Math.abs(cpp - cqq) === 1;
+    case 'bigger': return puz.roomSize[puz.roomOf[cp]] > puz.roomSize[puz.roomOf[cq]];
+    case 'smaller': return puz.roomSize[puz.roomOf[cp]] < puz.roomSize[puz.roomOf[cq]];
+  }
+  return true;
+}
+/* évaluation complète (toutes les personnes placées) */
+function evalClue(puz, cl, pos) {
+  if (UNARY.has(cl.kind)) return evalUnary(puz, cl, pos[cl.p]);
+  return evalBinary(puz, cl, pos[cl.p], pos[cl.q]);
+}
+/* évaluation partielle pour l'interface : true / false / null (inconnu) */
+function evalPartial(puz, cl, pos) {
+  if (UNARY.has(cl.kind)) return pos[cl.p] < 0 ? null : evalUnary(puz, cl, pos[cl.p]);
+  if (pos[cl.p] < 0 || pos[cl.q] < 0) return null;
+  return evalBinary(puz, cl, pos[cl.p], pos[cl.q]);
+}
+
+/* ---------- Solveur (compte les solutions, avec limite) ---------- */
+/* victimAnywhere (par défaut) : la victime peut occuper n'importe quelle case, même celle d'un meuble.
+   Une carte n'est donc jamais résolue grâce à « la dernière case est bloquée » : cette déduction cachée donnait deux solutions apparentes. */
+function solve(puz, clues, maxSol, nodeLimit, victimAnywhere) {
+  if (victimAnywhere === undefined) victimAnywhere = true;
+  const N = puz.N, P = puz.persons.length;
+  const cand = [];
+  for (let p = 0; p < P; p++) {
+    const list = [];
+    for (let cell = 0; cell < N * N; cell++) {
+      if (isBlocked(puz, cell) && !(p === 0 && victimAnywhere)) continue;
+      let ok = true;
+      for (const cl of clues) { if (cl.p === p && UNARY.has(cl.kind) && !evalUnary(puz, cl, cell)) { ok = false; break; } }
+      if (ok) list.push(cell);
+    }
+    cand.push(list);
+  }
+  const bin = Array.from({ length: P }, () => []);
+  for (const cl of clues) if (BINARY.has(cl.kind)) { bin[cl.p].push(cl); bin[cl.q].push(cl); }
+  const pos = new Array(P).fill(-1);
+  const rowUsed = new Array(N).fill(false), colUsed = new Array(N).fill(false), roomUsed = new Array(puz.K).fill(false);
+  const sols = []; let nodes = 0, exceeded = false;
+  function okWith(p, cell) {
+    if (p > 0 && roomUsed[puz.roomOf[cell]]) return false; // un seul suspect par pièce
+    for (const cl of bin[p]) {
+      const o = cl.p === p ? cl.q : cl.p;
+      if (pos[o] < 0) continue;
+      const cp = cl.p === p ? cell : pos[cl.p], cq = cl.q === p ? cell : pos[cl.q];
+      if (!evalBinary(puz, cl, cp, cq)) return false;
+    }
+    return true;
+  }
+  function rec(placed) {
+    if (exceeded) return;
+    if (placed === P) { sols.push(pos.slice()); return; }
+    let bestP = -1, bestList = null;
+    for (let p = 0; p < P; p++) {
+      if (pos[p] >= 0) continue;
+      const list = [];
+      for (const cell of cand[p]) {
+        if (rowUsed[(cell / N) | 0] || colUsed[cell % N]) continue;
+        if (!okWith(p, cell)) continue;
+        list.push(cell);
+        if (bestList && list.length >= bestList.length) break;
+      }
+      if (list.length === 0) return;
+      if (!bestList || list.length < bestList.length) { bestP = p; bestList = list; }
+    }
+    for (const cell of bestList) {
+      if (++nodes > nodeLimit) { exceeded = true; return; }
+      const r = (cell / N) | 0, c = cell % N, rm = puz.roomOf[cell];
+      pos[bestP] = cell; rowUsed[r] = true; colUsed[c] = true; if (bestP > 0) roomUsed[rm] = true;
+      rec(placed + 1);
+      pos[bestP] = -1; rowUsed[r] = false; colUsed[c] = false; if (bestP > 0) roomUsed[rm] = false;
+      if (sols.length >= maxSol || exceeded) return;
+    }
+  }
+  rec(0);
+  return { sols, exceeded, nodes };
+}
+
+/* ---------- Construction du plan ---------- */
+/* Une pièce par suspect : N-1 pièces, la dernière accueille aussi la victime. */
+function roomCountFor(N) { return N - 1; }
+
+/* Les pièces poussent à partir des cases où se trouvent les personnes : chaque groupe de départ est une pièce. */
+function genLayout(rng, N, groups) {
+  const K = groups.length, roomOf = new Array(N * N).fill(-1), sizes = new Array(K).fill(0);
+  groups.forEach((g, k) => g.forEach(c => { roomOf[c] = k; sizes[k]++; }));
+  let left = N * N - sizes.reduce((a, b) => a + b, 0);
+  while (left > 0) {
+    const opts = []; let total = 0;
+    for (let cell = 0; cell < N * N; cell++) {
+      if (roomOf[cell] >= 0) continue;
+      const r = (cell / N) | 0, c = cell % N;
+      const seen = new Set();
+      for (const d of D4) {
+        const rr = r + d[0], cc = c + d[1];
+        if (rr < 0 || cc < 0 || rr >= N || cc >= N) continue;
+        const rm = roomOf[rr * N + cc];
+        if (rm >= 0 && !seen.has(rm)) { seen.add(rm); const w = 1 / (sizes[rm] * sizes[rm]); opts.push([cell, rm, w]); total += w; }
+      }
+    }
+    if (!opts.length) return null;
+    let x = rng.next() * total, pick = opts[opts.length - 1];
+    for (const o of opts) { x -= o[2]; if (x <= 0) { pick = o; break; } }
+    roomOf[pick[0]] = pick[1]; sizes[pick[1]]++; left--;
+  }
+  if (sizes.some(s => s < 3)) return null;
+  return roomOf;
+}
+
+function genObjects(rng, N, roomOf, K, solSet) {
+  const objs = new Array(N * N).fill(null);
+  const maxBlocked = Math.floor(N * N * 0.2);
+  let blocked = 0;
+  for (let rm = 0; rm < K; rm++) {
+    const cells = []; for (let i = 0; i < N * N; i++) if (roomOf[i] === rm) cells.push(i);
+    rng.shuffle(cells);
+    let n = 1 + (cells.length >= 4 ? 1 : 0) + (cells.length >= 9 ? 1 : 0) + (rng.chance(0.4) ? 1 : 0);
+    n = Math.min(n, cells.length - 1);
+    const used = new Set();
+    for (let k = 0; k < n; k++) {
+      let key = null;
+      for (let t = 0; t < 6; t++) {
+        const wantOcc = blocked >= maxBlocked || rng.chance(0.3);
+        const k2 = rng.pick(wantOcc ? OCC_KEYS : BLOCK_KEYS);
+        if (!used.has(k2)) { key = k2; break; }
+      }
+      if (!key) continue;
+      // un meuble qui bloque ne peut pas recouvrir la case d'une personne
+      const cell = cells.find(c => objs[c] === null && (TYPES[key].occ || !solSet.has(c)));
+      if (cell === undefined) continue;
+      used.add(key);
+      objs[cell] = key;
+      if (!TYPES[key].occ) blocked++;
+    }
+  }
+  return objs;
+}
+
+/* Fenêtres (sur le mur extérieur) et portes (entre deux pièces voisines) */
+function genOpenings(rng, puz) {
+  const N = puz.N, K = puz.K, roomOf = puz.roomOf, objs = puz.objs;
+  puz.hasWin = new Array(N * N).fill(false); puz.hasDoor = new Array(N * N).fill(false);
+  puz.windows = []; puz.doors = [];
+  const blk = c => (objs[c] && !TYPES[objs[c]].occ) ? 1 : 0;
+  const edges = [];
+  for (let c = 0; c < N; c++) { edges.push({ cell: c, side: 't' }); edges.push({ cell: (N - 1) * N + c, side: 'b' }); }
+  for (let r = 0; r < N; r++) { edges.push({ cell: r * N, side: 'l' }); edges.push({ cell: r * N + N - 1, side: 'r' }); }
+  rng.shuffle(edges);
+  edges.sort((a, b) => blk(a.cell) - blk(b.cell));
+  const perRoom = new Array(K).fill(0), want = N + rng.int(2);
+  for (const e of edges) {
+    if (puz.windows.length >= want) break;
+    if (puz.hasWin[e.cell] || perRoom[roomOf[e.cell]] >= 2) continue;
+    puz.hasWin[e.cell] = true; perRoom[roomOf[e.cell]]++; puz.windows.push(e);
+  }
+  // portes : un arbre couvrant entre les pièces voisines, plus quelques passages en plus
+  const pairs = {};
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+    const i = r * N + c;
+    if (c + 1 < N && roomOf[i] !== roomOf[i + 1]) { const k = Math.min(roomOf[i], roomOf[i + 1]) + '-' + Math.max(roomOf[i], roomOf[i + 1]); (pairs[k] = pairs[k] || []).push({ cell: i, side: 'r', other: i + 1 }); }
+    if (r + 1 < N && roomOf[i] !== roomOf[i + N]) { const k = Math.min(roomOf[i], roomOf[i + N]) + '-' + Math.max(roomOf[i], roomOf[i + N]); (pairs[k] = pairs[k] || []).push({ cell: i, side: 'b', other: i + N }); }
+  }
+  const keys = rng.shuffle(Object.keys(pairs)), par = [...Array(K).keys()];
+  const find = x => par[x] === x ? x : (par[x] = find(par[x]));
+  const chosen = [];
+  for (const k of keys) { const [a, b] = k.split('-').map(Number); if (find(a) !== find(b)) { par[find(a)] = find(b); chosen.push(k); } }
+  for (const k of keys) if (chosen.indexOf(k) < 0 && rng.chance(0.3)) chosen.push(k);
+  for (const k of chosen) {
+    const list = rng.shuffle(pairs[k].slice()).sort((x, y) => (blk(x.cell) + blk(x.other)) - (blk(y.cell) + blk(y.other)));
+    const d = list[0];
+    puz.doors.push(d); puz.hasDoor[d.cell] = true; puz.hasDoor[d.other] = true;
+  }
+}
+
+function randomPerm(rng, N) {
+  const cols = rng.shuffle([...Array(N).keys()]);
+  return cols;
+}
+
+function buildBase(rng, N, T) {
+  const K = roomCountFor(N), theme = THEMES[T];
+  // 1. où se trouve chacun : une personne par ligne et par colonne
+  const cols = randomPerm(rng, N);
+  const cells = cols.map((c, r) => r * N + c);
+  // 2. la victime et le tueur partagent une pièce : on prend deux personnes assez proches
+  const pairs = [];
+  for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+    const d = Math.abs(((cells[i] / N) | 0) - ((cells[j] / N) | 0)) + Math.abs((cells[i] % N) - (cells[j] % N));
+    pairs.push([i, j, d]);
+  }
+  const maxD = N <= 6 ? 4 : 5;
+  let near = pairs.filter(p => p[2] <= maxD);
+  if (!near.length) { const m = Math.min(...pairs.map(p => p[2])); near = pairs.filter(p => p[2] === m); }
+  const pr = rng.pick(near);
+  const ca = cells[pr[0]], cb = cells[pr[1]];
+  const ra = (ca / N) | 0, cA = ca % N, rb = (cb / N) | 0, cB = cb % N;
+  const path = new Set([ca, cb]);
+  if (rng.chance(0.5)) { // d'abord sur la ligne de A, puis sur la colonne de B
+    for (let c = Math.min(cA, cB); c <= Math.max(cA, cB); c++) path.add(ra * N + c);
+    for (let r = Math.min(ra, rb); r <= Math.max(ra, rb); r++) path.add(r * N + cB);
+  } else {
+    for (let r = Math.min(ra, rb); r <= Math.max(ra, rb); r++) path.add(r * N + cA);
+    for (let c = Math.min(cA, cB); c <= Math.max(cA, cB); c++) path.add(rb * N + c);
+  }
+  const groups = [[...path]];
+  for (let i = 0; i < N; i++) if (i !== pr[0] && i !== pr[1]) groups.push([cells[i]]);
+  rng.shuffle(groups);
+  const roomOf = genLayout(rng, N, groups);
+  if (!roomOf) return null;
+  const solSet = new Set(cells);
+  const objs = genObjects(rng, N, roomOf, K, solSet);
+  const roomObjs = Array.from({ length: K }, () => []);
+  for (let i = 0; i < N * N; i++) if (objs[i] && roomObjs[roomOf[i]].indexOf(objs[i]) < 0) roomObjs[roomOf[i]].push(objs[i]);
+  const roomAdj = Array.from({ length: K }, () => new Array(K).fill(false));
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+    const a = roomOf[r * N + c];
+    if (c + 1 < N) { const b = roomOf[r * N + c + 1]; if (a !== b) roomAdj[a][b] = roomAdj[b][a] = true; }
+    if (r + 1 < N) { const b = roomOf[(r + 1) * N + c]; if (a !== b) roomAdj[a][b] = roomAdj[b][a] = true; }
+  }
+  const names = rng.shuffle(theme.rooms.slice()).slice(0, K).map(x => ({ name: x[0], prep: x[1] }));
+  const puz = { N, K, theme: T, themeName: theme.name, rooms: names, roomOf, objs, roomObjs, roomAdj, persons: [] };
+  // tailles des pièces, plus grande / plus petite (seulement si unique)
+  puz.roomSize = new Array(K).fill(0);
+  for (let i = 0; i < N * N; i++) puz.roomSize[roomOf[i]]++;
+  const mx = Math.max(...puz.roomSize), mn = Math.min(...puz.roomSize);
+  puz.biggest = puz.roomSize.filter(s => s === mx).length === 1 ? puz.roomSize.indexOf(mx) : -1;
+  puz.smallest = puz.roomSize.filter(s => s === mn).length === 1 ? puz.roomSize.indexOf(mn) : -1;
+  puz.objTypes = [];
+  for (let i = 0; i < N * N; i++) if (objs[i] && puz.objTypes.indexOf(objs[i]) < 0) puz.objTypes.push(objs[i]);
+  genOpenings(rng, puz);
+  // 3. qui est la victime : l'un des deux de la pièce partagée ; l'autre est le tueur
+  const vIdx = rng.chance(0.5) ? pr[0] : pr[1], kIdx = vIdx === pr[0] ? pr[1] : pr[0];
+  const others = rng.shuffle(cells.filter((c, i) => i !== vIdx));
+  const pool = rng.shuffle(NAMES.slice()).slice(0, N);
+  puz.persons = pool.map((n, i) => ({ id: i, name: n[0], g: n[1], victim: i === 0 }));
+  puz.solution = [cells[vIdx]].concat(others);
+  let killer = -1;
+  for (let p = 1; p < N; p++) if (roomOf[puz.solution[p]] === roomOf[puz.solution[0]]) killer = p;
+  if (killer < 0) return null;
+  puz.killer = killer;
+  return puz;
+}
+
+/* ---------- Indices ---------- */
+function candidatesFor(puz, pos, allowed) {
+  const out = [], N = puz.N, P = puz.persons.length;
+  for (let p = 1; p < P; p++) { // la victime n'a jamais d'indice
+    const cell = pos[p], r = (cell / N) | 0, c = cell % N, rm = puz.roomOf[cell];
+    const seat = !!(puz.objs[cell] && TYPES[puz.objs[cell]].occ);
+    if (allowed.has('room')) out.push({ kind: 'room', p, room: rm });
+    if (allowed.has('notroom')) for (let k = 0; k < puz.K; k++) if (k !== rm) out.push({ kind: 'notroom', p, room: k });
+    if (allowed.has('roomobj')) for (const o of puz.roomObjs[rm]) out.push({ kind: 'roomobj', p, obj: o });
+    if (allowed.has('on') && seat) out.push({ kind: 'on', p, obj: puz.objs[cell] });
+    if (allowed.has('onany') && seat) out.push({ kind: 'onany', p });
+    if (allowed.has('notonany') && !seat) out.push({ kind: 'notonany', p });
+    if (allowed.has('window') && puz.hasWin[cell]) out.push({ kind: 'window', p });
+    if (allowed.has('nowindow') && !puz.hasWin[cell]) out.push({ kind: 'nowindow', p });
+    if (allowed.has('door') && puz.hasDoor[cell]) out.push({ kind: 'door', p });
+    if (allowed.has('nodoor') && !puz.hasDoor[cell]) out.push({ kind: 'nodoor', p });
+    if (allowed.has('biggest') && puz.biggest === rm) out.push({ kind: 'biggest', p });
+    if (allowed.has('smallest') && puz.smallest === rm) out.push({ kind: 'smallest', p });
+    if (allowed.has('beside')) {
+      const seen = new Set();
+      for (const d of D4) {
+        const rr = r + d[0], cc = c + d[1];
+        if (rr < 0 || cc < 0 || rr >= N || cc >= N) continue;
+        const j = rr * N + cc;
+        if (puz.roomOf[j] === rm && puz.objs[j] && !seen.has(puz.objs[j])) { seen.add(puz.objs[j]); out.push({ kind: 'beside', p, obj: puz.objs[j] }); }
+      }
+    }
+    if (allowed.has('notbeside')) for (const o of puz.objTypes) if (!besideObj(puz, cell, o)) out.push({ kind: 'notbeside', p, obj: o });
+    if (allowed.has('notroomobj')) for (const o of puz.objTypes) if (puz.roomObjs[rm].indexOf(o) < 0) out.push({ kind: 'notroomobj', p, obj: o });
+    for (let q = p + 1; q < P; q++) {
+      const cq = pos[q], rq = (cq / N) | 0, cqq = cq % N, rmq = puz.roomOf[cq];
+      if (allowed.has('nextroom') && puz.roomAdj[rm][rmq]) out.push({ kind: 'nextroom', p, q });
+      if (allowed.has('farroom') && rm !== rmq && !puz.roomAdj[rm][rmq]) out.push({ kind: 'farroom', p, q });
+      if (allowed.has('diag') && Math.abs(r - rq) === 1 && Math.abs(c - cqq) === 1) out.push({ kind: 'diag', p, q });
+      const sa = puz.roomSize[rm], sb = puz.roomSize[rmq];
+      if (sa !== sb) {
+        // une même inégalité peut être dite dans les deux sens
+        if (sa > sb) { if (allowed.has('bigger')) out.push({ kind: 'bigger', p, q }); if (allowed.has('smaller')) out.push({ kind: 'smaller', p: q, q: p }); }
+        else { if (allowed.has('smaller')) out.push({ kind: 'smaller', p, q }); if (allowed.has('bigger')) out.push({ kind: 'bigger', p: q, q: p }); }
+      }
+    }
+  }
+  return out;
+}
+function clueKey(cl) { return [cl.kind, cl.p, cl.q, cl.room, cl.obj, cl.k].join('|'); }
+const WEAK = new Set(['notroom', 'notbeside', 'notonany', 'notroomobj', 'nowindow', 'nodoor']);
+function baseWeight(c) { return WEAK.has(c.kind) ? 1 : c.kind === 'onany' ? 2 : 3; }
+
+/* un indice de base par suspect, puis on ajoute les indices qui éliminent le plus de solutions parallèles */
+function reachUnique(rng, puz, all, clues, used, D, maxOwn) {
+  const pos = puz.solution;
+  const ownerCount = p => clues.filter(c => c.p === p).length;
+  for (let it = 0; it < 160; it++) {
+    const r = solve(puz, clues, 30, NODE_LIMIT);
+    if (r.exceeded) return false;
+    if (r.sols.length === 1) return true;
+    const alts = r.sols.filter(s => s.some((v, i) => v !== pos[i]));
+    const pool = all.filter(c => !used.has(clueKey(c)) && ownerCount(c.p) < maxOwn);
+    let best = null, bs = -1;
+    for (const cl of pool) {
+      let sc = 0;
+      for (const a of alts) if (!evalClue(puz, cl, a)) sc++;
+      if (sc === 0) continue;
+      const rel = (D >= 2 && !UNARY.has(cl.kind)) ? 0.8 : 0;
+      const val = sc + rel + rng.next() * 1.2;
+      if (val > bs) { bs = val; best = cl; }
+    }
+    if (!best) return false;
+    clues.push(best); used.add(clueKey(best));
+  }
+  return false;
+}
+function baseClues(rng, puz, all) {
+  const clues = [], used = new Set(), P = puz.persons.length;
+  const unaryAll = all.filter(c => UNARY.has(c.kind));
+  for (let p = 1; p < P; p++) {
+    const mine = unaryAll.filter(c => c.p === p);
+    const weights = mine.map(baseWeight);
+    const tot = weights.reduce((a, b) => a + b, 0);
+    let x = rng.next() * tot, pick = mine[mine.length - 1];
+    for (let i = 0; i < mine.length; i++) { x -= weights[i]; if (x <= 0) { pick = mine[i]; break; } }
+    clues.push(pick); used.add(clueKey(pick));
+  }
+  return { clues, used };
+}
+
+function buildClues(rng, puz, D) {
+  const pos = puz.solution;
+  const all = candidatesFor(puz, pos, new Set(ALLOWED[D]));
+  const { clues, used } = baseClues(rng, puz, all);
+  if (!reachUnique(rng, puz, all, clues, used, D, 3)) return null;
+  const fin = solve(puz, clues, 2, NODE_LIMIT);
+  if (fin.exceeded || fin.sols.length !== 1) return null;
+  // minimisation
+  const prob = D === 1 ? 0.45 : D === 2 ? 0.8 : 1;
+  const order = rng.shuffle(clues.slice());
+  let cur = clues.slice();
+  for (const cl of order) {
+    if (!rng.chance(prob)) continue;
+    const idx = cur.indexOf(cl);
+    if (idx < 0) continue;
+    if (cur.filter(c => c.p === cl.p).length <= 1) continue;
+    const tmp = cur.slice(); tmp.splice(idx, 1);
+    const r = solve(puz, tmp, 2, NODE_LIMIT);
+    if (!r.exceeded && r.sols.length === 1) cur = tmp;
+  }
+  cur.sort((a, b) => a.p - b.p);
+  return cur.map((c, i) => Object.assign({ id: i }, c));
+}
+
+/* ======================================================================
+   Raisonnement « humain » : trois niveaux de techniques.
+   Niveau 1 : indices seuls, lignes/colonnes/pièces déjà prises, case unique, pièce à un seul candidat.
+   Niveau 2 : croiser deux indices (suspect A par rapport à B), zones verrouillées.
+   Niveau 3 : paires de suspects, hypothèse puis contradiction.
+   La victime n'entre pas dans le calcul : elle occupe la dernière case libre.
+   ====================================================================== */
+const R_SINGLE = { tech: 'single', level: 1 };
+function hsNew(puz, clues, given) {
+  const N = puz.N, P = puz.persons.length, NN = N * N;
+  const st = { puz, N, P, NN, K: puz.K, dom: [null], cnt: [0], placed: new Array(P).fill(-1), why: new Array(P).fill(null), bin: [], log: null, maxLevel: 0, bad: false };
+  for (let p = 1; p < P; p++) {
+    const d = new Uint8Array(NN); let n = 0;
+    const mine = clues.filter(c => c.p === p && UNARY.has(c.kind));
+    for (let cell = 0; cell < NN; cell++) {
+      if (isBlocked(puz, cell)) continue;
+      let ok = true;
+      for (const cl of mine) if (!evalUnary(puz, cl, cell)) { ok = false; break; }
+      if (ok) { d[cell] = 1; n++; }
+    }
+    st.dom.push(d); st.cnt.push(n);
+  }
+  for (const cl of clues) if (BINARY.has(cl.kind)) st.bin.push(cl);
+  if (given) for (let p = 1; p < P; p++) if (given[p] >= 0) {
+    if (!st.dom[p][given[p]]) { st.bad = true; continue; }
+    st.given = st.given || [];
+    // placé par le joueur : on restreint puis on pose (sans le compter comme une étape)
+    for (let x = 0; x < NN; x++) if (st.dom[p][x] && x !== given[p]) hsRem(st, p, x, null);
+    hsPlace(st, p, given[p]);
+    st.given.push(p);
+  }
+  return st;
+}
+function hsClone(st) {
+  return { puz: st.puz, N: st.N, P: st.P, NN: st.NN, K: st.K, dom: st.dom.map(d => d && d.slice()), cnt: st.cnt.slice(), placed: st.placed.slice(), why: st.why.slice(), bin: st.bin, log: null, maxLevel: st.maxLevel, bad: st.bad };
+}
+function hsRem(st, p, cell, why) {
+  if (!st.dom[p][cell]) return false;
+  st.dom[p][cell] = 0; st.cnt[p]--;
+  if (why) { const w = st.why[p]; if (!w || why.level >= w.level) st.why[p] = why; }
+  return true;
+}
+function hsPlace(st, p, cell) {
+  const N = st.N, r = (cell / N) | 0, c = cell % N, rm = st.puz.roomOf[cell];
+  st.placed[p] = cell;
+  for (let q = 1; q < st.P; q++) {
+    if (q === p) continue;
+    const d = st.dom[q];
+    for (let x = 0; x < st.NN; x++) if (d[x] && (((x / N) | 0) === r || x % N === c || st.puz.roomOf[x] === rm)) hsRem(st, q, x, R_SINGLE);
+  }
+}
+function hsDomCells(st, p) { const out = []; const d = st.dom[p]; for (let x = 0; x < st.NN; x++) if (d[x]) out.push(x); return out; }
+function hsCheckBad(st) {
+  if (st.bad) return true;
+  for (let p = 1; p < st.P; p++) if (st.cnt[p] <= 0) return true;
+  return false;
+}
+function r1single(st) {
+  for (let p = 1; p < st.P; p++) {
+    if (st.placed[p] >= 0 || st.cnt[p] !== 1) continue;
+    const cell = hsDomCells(st, p)[0], w = st.why[p];
+    if (st.log) st.log.push({ p, cell, tech: w ? w.tech : 'clue', level: w ? w.level : 1, info: w ? w.info : null });
+    hsPlace(st, p, cell);
+    return true;
+  }
+  return false;
+}
+function r1room(st) {
+  let prog = false;
+  for (let R = 0; R < st.K; R++) {
+    let occ = false; const cands = [];
+    for (let p = 1; p < st.P; p++) {
+      if (st.placed[p] >= 0) { if (st.puz.roomOf[st.placed[p]] === R) occ = true; continue; }
+      const d = st.dom[p];
+      for (let x = 0; x < st.NN; x++) if (d[x] && st.puz.roomOf[x] === R) { cands.push(p); break; }
+    }
+    if (occ) continue;
+    if (cands.length === 0) { st.bad = true; return true; }
+    if (cands.length === 1) {
+      const p = cands[0], why = { tech: 'room', level: 1, info: { room: R } };
+      for (let x = 0; x < st.NN; x++) if (st.dom[p][x] && st.puz.roomOf[x] !== R) { hsRem(st, p, x, why); prog = true; }
+    }
+  }
+  return prog;
+}
+function r2arc(st) {
+  let prog = false;
+  const roomOf = st.puz.roomOf, N = st.N;
+  for (const cl of st.bin) {
+    for (let dir = 0; dir < 2; dir++) {
+      const a = dir ? cl.q : cl.p, b = dir ? cl.p : cl.q;
+      const da = st.dom[a], db = st.dom[b];
+      const bcells = hsDomCells(st, b);
+      for (let x = 0; x < st.NN; x++) {
+        if (!da[x]) continue;
+        let ok = false;
+        for (const y of bcells) {
+          if (((y / N) | 0) === ((x / N) | 0) || y % N === x % N || roomOf[y] === roomOf[x]) continue;
+          if (evalBinary(st.puz, cl, dir ? y : x, dir ? x : y)) { ok = true; break; }
+        }
+        if (!ok) { hsRem(st, a, x, { tech: 'binary', level: 2, info: { with: b } }); prog = true; }
+      }
+    }
+  }
+  return prog;
+}
+function lineFns(st) { const N = st.N, roomOf = st.puz.roomOf; return [x => (x / N) | 0, x => x % N, x => roomOf[x]]; }
+function r2lock(st) {
+  let prog = false; const fns = lineFns(st);
+  for (let p = 1; p < st.P; p++) {
+    if (st.placed[p] >= 0 || st.cnt[p] < 2) continue;
+    const cells = hsDomCells(st, p);
+    for (const f of fns) {
+      const v = f(cells[0]);
+      if (!cells.every(x => f(x) === v)) continue;
+      for (let q = 1; q < st.P; q++) {
+        if (q === p) continue;
+        for (let x = 0; x < st.NN; x++) if (st.dom[q][x] && f(x) === v) { hsRem(st, q, x, { tech: 'locked', level: 2, info: { by: p } }); prog = true; }
+      }
+    }
+  }
+  return prog;
+}
+function r3pair(st) {
+  let prog = false; const fns = lineFns(st);
+  const un = []; for (let p = 1; p < st.P; p++) if (st.placed[p] < 0) un.push(p);
+  for (const f of fns) {
+    for (let i = 0; i < un.length; i++) for (let j = i + 1; j < un.length; j++) {
+      const p = un[i], q = un[j], set = new Set();
+      for (let x = 0; x < st.NN; x++) if (st.dom[p][x] || st.dom[q][x]) set.add(f(x));
+      if (set.size !== 2) continue;
+      for (const o of un) {
+        if (o === p || o === q) continue;
+        for (let x = 0; x < st.NN; x++) if (st.dom[o][x] && set.has(f(x))) { hsRem(st, o, x, { tech: 'pair', level: 3, info: { a: p, b: q } }); prog = true; }
+      }
+    }
+  }
+  // paire cachée sur les pièces : deux pièces dont les seuls candidats sont les deux mêmes suspects
+  const cand = []; for (let R = 0; R < st.K; R++) cand.push(new Set());
+  const occ = new Array(st.K).fill(false);
+  for (let p = 1; p < st.P; p++) { if (st.placed[p] >= 0) { occ[st.puz.roomOf[st.placed[p]]] = true; continue; } for (let x = 0; x < st.NN; x++) if (st.dom[p][x]) cand[st.puz.roomOf[x]].add(p); }
+  for (let A = 0; A < st.K; A++) for (let B = A + 1; B < st.K; B++) {
+    if (occ[A] || occ[B]) continue;
+    const S = new Set([...cand[A], ...cand[B]]);
+    if (S.size !== 2) continue;
+    for (const p of S) for (let x = 0; x < st.NN; x++) { const rr = st.puz.roomOf[x]; if (st.dom[p][x] && rr !== A && rr !== B) { hsRem(st, p, x, { tech: 'pair', level: 3, info: { rooms: [A, B] } }); prog = true; } }
+  }
+  return prog;
+}
+function r3look(st) {
+  let prog = false;
+  const un = []; for (let p = 1; p < st.P; p++) if (st.placed[p] < 0 && st.cnt[p] >= 2) un.push(p);
+  un.sort((a, b) => st.cnt[a] - st.cnt[b]);
+  for (const p of un) {
+    for (const x of hsDomCells(st, p)) {
+      if (!st.dom[p][x]) continue;
+      const t = hsClone(st);
+      for (let y = 0; y < t.NN; y++) if (t.dom[p][y] && y !== x) { t.dom[p][y] = 0; t.cnt[p]--; }
+      hsPlace(t, p, x);
+      if (hsProp(t, 2) === 'bad') { hsRem(st, p, x, { tech: 'look', level: 3, info: null }); prog = true; }
+    }
+    if (prog) return true;
+  }
+  return prog;
+}
+function hsProp(st, maxLevel) {
+  for (let guard = 0; guard < 4000; guard++) {
+    if (hsCheckBad(st)) return 'bad';
+    let all = true; for (let p = 1; p < st.P; p++) if (st.placed[p] < 0) { all = false; break; }
+    if (all) return 'solved';
+    if (r1single(st) || r1room(st)) { st.maxLevel = Math.max(st.maxLevel, 1); continue; }
+    if (maxLevel >= 2 && (r2arc(st) || r2lock(st))) { st.maxLevel = Math.max(st.maxLevel, 2); continue; }
+    if (maxLevel >= 3 && (r3pair(st) || r3look(st))) { st.maxLevel = Math.max(st.maxLevel, 3); continue; }
+    return 'stuck';
+  }
+  return 'stuck';
+}
+/* Résout comme un humain, avec au plus maxLevel techniques. Renvoie {solved, level, steps, st} */
+function humanSolve(puz, clues, opts) {
+  opts = opts || {};
+  const st = hsNew(puz, clues, opts.given);
+  st.log = [];
+  const res = hsProp(st, opts.maxLevel || 3);
+  const steps = st.log.filter(s => !(st.given && st.given.indexOf(s.p) >= 0));
+  return { solved: res === 'solved', bad: res === 'bad', level: st.maxLevel, steps, st };
+}
+/* Prochain suspect déductible à partir des placements (corrects) du joueur */
+function nextDeduction(puz, clues, given) {
+  const st = hsNew(puz, clues, given);
+  st.log = [];
+  // on s'arrête dès qu'une personne vient d'être posée par déduction
+  const before = st.placed.slice();
+  const maxLevel = 3;
+  for (let guard = 0; guard < 400; guard++) {
+    if (hsCheckBad(st)) break;
+    const n0 = st.log.length;
+    let prog = false, lvl = 0;
+    if (r1single(st) || r1room(st)) { prog = true; lvl = 1; }
+    else if (r2arc(st) || r2lock(st)) { prog = true; lvl = 2; }
+    else if (r3pair(st) || r3look(st)) { prog = true; lvl = 3; }
+    if (st.log.length > n0) { const s = st.log[st.log.length - 1]; s.level = Math.max(s.level, lvl); return s; }
+    if (!prog) break;
+  }
+  // raisonnement trop profond pour les techniques connues : on désigne le suspect le plus contraint
+  let bp = -1;
+  for (let p = 1; p < puz.persons.length; p++) if (before[p] < 0 && (bp < 0 || st.cnt[p] < st.cnt[bp])) bp = p;
+  if (bp < 0) return null;
+  return { p: bp, cell: puz.solution[bp], tech: 'deep', level: 4, info: null };
+}
+
+/* ---------- Mode « difficulté mesurée » ---------- */
+function buildMeasured(rng, puz, level) {
+  const pos = puz.solution;
+  const all = candidatesFor(puz, pos, new Set(KINDS_MEASURED[level]));
+  const { clues, used } = baseClues(rng, puz, all);
+  if (!reachUnique(rng, puz, all, clues, used, level, 4)) return null;
+  // on ajoute des indices jusqu'à ce qu'un humain, avec ces techniques, résolve la carte
+  let h = humanSolve(puz, clues, { maxLevel: level });
+  for (let it = 0; it < 70 && !h.solved; it++) {
+    const pool = all.filter(c => !used.has(clueKey(c)));
+    if (!pool.length) return null;
+    const sample = []; for (let k = 0; k < 30; k++) sample.push(pool[rng.int(pool.length)]);
+    let best = null, bs = -1;
+    for (const cl of sample) {
+      let sc = 0;
+      if (UNARY.has(cl.kind)) { const d = h.st.dom[cl.p]; for (let x = 0; x < puz.N * puz.N; x++) if (d[x] && !evalUnary(puz, cl, x)) sc++; }
+      else sc = 1 + rng.int(3);
+      const val = sc + rng.next() * 2;
+      if (val > bs) { bs = val; best = cl; }
+    }
+    clues.push(best); used.add(clueKey(best));
+    h = humanSolve(puz, clues, { maxLevel: level });
+  }
+  if (!h.solved) return null;
+  // minimisation : on retire tout indice dont on peut se passer sans dépasser le niveau
+  let cur = clues.slice();
+  for (const cl of rng.shuffle(clues.slice())) {
+    if (cur.filter(c => c.p === cl.p).length <= 1) continue;
+    const tmp = cur.filter(c => c !== cl);
+    if (humanSolve(puz, tmp, { maxLevel: level }).solved) cur = tmp;
+  }
+  const fin = humanSolve(puz, cur, { maxLevel: level });
+  if (!fin.solved) return null;
+  const chk = solve(puz, cur, 2, NODE_LIMIT);
+  if (chk.exceeded || chk.sols.length !== 1) return null;
+  cur.sort((a, b) => a.p - b.p);
+  return { clues: cur.map((c, i) => Object.assign({ id: i }, c)), level: fin.level };
+}
+
+/* ---------- Habillage : métiers, histoire ---------- */
+function deN(n) { return (/^[AEIOUYÉÈÂÎ]/.test(n) ? 'd’' : 'de ') + n; }
+function startsVowel(s) { return /^[aeiouyéèêâîôhAEIOUYÉÈÊÂÎÔH]/.test(s); }
+function jobOf(puz, i) { return puz.persons[i].job; }
+/* « du jardinier », « de la cuisinière », « de l’avocat » */
+function refDe(puz, i, mode) {
+  const pr = puz.persons[i];
+  if (mode === 'job' && pr.job) {
+    if (startsVowel(pr.job)) return 'de l’' + pr.job;
+    return pr.g === 'F' ? 'de la ' + pr.job : 'du ' + pr.job;
+  }
+  return (/^[AEIOUYÉÈÂÎ]/.test(pr.name) ? 'd’' : 'de ') + pr.name;
+}
+function refA(puz, i, mode) {
+  const pr = puz.persons[i];
+  if (mode === 'job' && pr.job) {
+    if (startsVowel(pr.job)) return 'à l’' + pr.job;
+    return pr.g === 'F' ? 'à la ' + pr.job : 'au ' + pr.job;
+  }
+  return 'à ' + pr.name;
+}
+const BIO_REL = [['ancien associé {V}', 'ancienne associée {V}'], ['voisin {V} depuis dix ans', 'voisine {V} depuis dix ans'], ['ami d’enfance {V}', 'amie d’enfance {V}'], ['cousin éloigné {V}', 'cousine éloignée {V}'], ['ancien employé {V}', 'ancienne employée {V}'], ['rival professionnel {V}', 'rivale professionnelle {V}'], ['filleul {V}', 'filleule {V}'], ['proche collaborateur {V}', 'proche collaboratrice {V}'], ['ancien voisin {V}', 'ancienne voisine {V}'], ['créancier {V}', 'créancière {V}']];
+const BIO_MOTIVE = ['{N} avait une dette envers {V}.', '{N} se disputait avec {V} depuis des mois.', '{N} craignait que {V} ne révèle un secret.', '{N} convoitait la place de {V}.', '{N} espérait un héritage de la part de {V}.', '{N} venait d’apprendre une trahison de {V}.', '{N} jalousait {V} en silence.', '{N} avait prêté une fortune à {V}.', '{N} détenait un document compromettant sur {V}.', '{N} avait essuyé un refus de {V} la veille.'];
+const BIO_SAYS = ['affirme avoir passé la soirée à téléphoner', 'dit avoir cherché ses lunettes un bon moment', 'prétend n’avoir croisé personne', 'assure avoir entendu un bruit sourd', 'jure avoir relu des papiers toute la soirée', 'dit s’être reposé un instant', 'affirme avoir écrit un long message', 'prétend avoir discuté avec un inconnu', 'assure ne pas avoir regardé l’heure', 'jure n’avoir rien vu ni rien entendu'];
+function dressUp(puz, code, clues) {
+  const rng = makeRng('story|' + code);
+  const jobs = rng.shuffle(JOBS[puz.theme].slice());
+  puz.persons.forEach((pr, i) => { pr.job = jobs[i][pr.g === 'F' ? 1 : 0]; });
+  const v = puz.persons[0], st = STORIES[puz.theme];
+  const hh = 20 + rng.int(5), mm = rng.int(12) * 5;
+  const time = (hh % 24) + ' h ' + (mm < 10 ? '0' : '') + mm;
+  const dead = v.g === 'F' ? 'retrouvée' : 'retrouvé';
+  puz.story = {
+    time, place: st.place,
+    short: time + ' · ' + v.name + ', ' + v.job + ', ' + dead + ' sans vie ' + st.place + '.',
+    title: v.name + ', ' + v.job,
+    text: st.mood + ' À ' + time + ', ' + v.name + ', ' + v.job + ', a été ' + dead + ' sans vie ' + st.place + '. ' +
+      'Parmi les ' + (puz.N - 1) + ' suspects, un seul se trouvait dans la même pièce ' + (v.g === 'F' ? 'qu’elle' : 'que lui') + '. Qui est le coupable ?'
+  };
+  for (const cl of clues) if (BINARY.has(cl.kind)) cl.ref = rng.chance(0.4) ? 'job' : 'name';
+  // un court profil par suspect : lien avec la victime, mobile, version des faits (pure ambiance, sans lieu)
+  const rels = rng.shuffle(BIO_REL.slice()), mots = rng.shuffle(BIO_MOTIVE.slice()), says = rng.shuffle(BIO_SAYS.slice());
+  const V = v.name, DV = deN(V);
+  puz.persons.forEach((pr, i) => {
+    if (i === 0) return;
+    const k = i - 1, F = pr.g === 'F';
+    pr.bio = cap(rels[k][F ? 1 : 0]).replace('{V}', DV) + '. ' + mots[k].replace('{N}', pr.name).replace('{V}', V).replace('{DV}', DV) + ' ' + (F ? 'Elle' : 'Il') + ' ' + says[k] + '.';
+  });
+}
+
+function generate(rawCode) {
+  const pc = parseCode(rawCode);
+  if (!pc) return null;
+  const rng = makeRng('alibi|' + pc.code);
+  let fallback = null;
+  const maxAttempts = pc.measured ? 160 : 200;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const puz = buildBase(rng, pc.N, pc.T);
+    if (!puz) continue;
+    let clues, lvl = 0;
+    if (pc.measured) {
+      const r = buildMeasured(rng, puz, pc.D);
+      if (!r) continue;
+      clues = r.clues; lvl = r.level;
+    } else {
+      clues = buildClues(rng, puz, pc.D);
+      if (!clues) continue;
+    }
+    puz.clues = clues; puz.code = pc.code; puz.D = pc.D; puz.measured = pc.measured; puz.level = lvl; puz.attempts = attempt + 1;
+    dressUp(puz, pc.code, clues);
+    if (!pc.measured || lvl === pc.D) return puz;
+    if (!fallback || lvl > fallback.level) fallback = puz;
+  }
+  return fallback;
+}
+
+/* ---------- Textes des indices ---------- */
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function clueText(puz, cl) {
+  const T = TYPES, mode = cl.ref || 'name';
+  const art = T[cl.obj] ? T[cl.obj].art + ' ' + T[cl.obj].name : '';
+  switch (cl.kind) {
+    case 'room': return cap(puz.rooms[cl.room].prep);
+    case 'notroom': return 'Pas ' + puz.rooms[cl.room].prep;
+    case 'on': return 'Sur ' + art;
+    case 'beside': return 'À côté d’' + art;
+    case 'notbeside': return 'Pas à côté d’' + art;
+    case 'roomobj': return 'Dans la pièce où il y a ' + art;
+    case 'notroomobj': return 'Dans une pièce sans ' + T[cl.obj].name;
+    case 'onany': return (puz.persons[cl.p].g === 'F' ? 'Installée' : 'Installé') + ' sur un meuble de repos';
+    case 'notonany': return 'Pas sur un meuble de repos';
+    case 'window': return 'Près d’une fenêtre';
+    case 'nowindow': return 'Pas près d’une fenêtre';
+    case 'door': return 'À côté d’une porte';
+    case 'nodoor': return 'Pas à côté d’une porte';
+    case 'biggest': return 'Dans la plus grande pièce';
+    case 'smallest': return 'Dans la plus petite pièce';
+    case 'nextroom': return 'Dans une pièce voisine de celle ' + refDe(puz, cl.q, mode);
+    case 'farroom': return 'Dans une pièce éloignée de celle ' + refDe(puz, cl.q, mode);
+    case 'bigger': return 'Dans une pièce plus grande que celle ' + refDe(puz, cl.q, mode);
+    case 'smaller': return 'Dans une pièce plus petite que celle ' + refDe(puz, cl.q, mode);
+    case 'diag': return 'En biais, collé' + (puz.persons[cl.p].g === 'F' ? 'e ' : ' ') + refA(puz, cl.q, mode);
+  }
+  return '';
+}
+
+/* ---------- Indices progressifs : explication d'une déduction ---------- */
+function explainStep(puz, step) {
+  const nm = puz.persons[step.p].name, room = puz.rooms[puz.roomOf[step.cell]];
+  const info = step.info || {};
+  let text;
+  switch (step.tech) {
+    case 'clue': text = 'Les indices ' + deN(nm) + ' ne laissent qu’une seule case possible.'; break;
+    case 'single': text = 'Avec les lignes, colonnes et pièces déjà occupées, il ne reste qu’une seule case possible pour ' + nm + '.'; break;
+    case 'room': text = 'La pièce ' + (info.room !== undefined ? '« ' + puz.rooms[info.room].name + ' » ' : '') + 'doit accueillir un suspect, et seul ' + nm + ' peut encore y aller.'; break;
+    case 'binary': text = 'Croisez l’indice ' + deN(nm) + ' avec celui' + (info.with ? ' ' + deN(puz.persons[info.with].name) : ' d’un autre suspect') + ' : une seule case reste compatible.'; break;
+    case 'locked': text = 'Un autre suspect est forcément dans cette zone, ce qui écarte des cases pour ' + nm + '.'; break;
+    case 'pair': text = 'Deux suspects se partagent exactement deux zones : les autres doivent s’en écarter, ce qui libère ' + nm + '.'; break;
+    case 'look': text = 'Faites l’hypothèse d’une case pour ' + nm + ' : suivez les conséquences, la plupart mènent à une impasse.'; break;
+    default: text = 'Cas difficile : essayez des hypothèses sur ' + nm + ' et cherchez la contradiction.';
+  }
+  return { name: nm, text, room: puz.roomOf[step.cell], roomName: room.name };
+}
+
+if (typeof module !== 'undefined') module.exports = { TYPES, THEMES, THEME_KEYS, JOBS, generate, parseCode, makeCode, randomSeed, dailyCode, solve, evalClue, evalPartial, evalUnary, isBlocked, clueText, humanSolve, nextDeduction, explainStep, deN, UNARY, BINARY, ALLOWED, KINDS_MEASURED, LEVEL_NAMES, NODE_LIMIT, SEED_ALPHABET };
+
+</script>
+<script>
+(function () {
+  'use strict';
+/* ===== Meubles dessinés en SVG (viewBox 40×40) : un symbole par objet ===== */
+var ART = (function () {
+  var OL = 'stroke="#2e2419" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"';
+  var SH = '<ellipse cx="20" cy="36.6" rx="14" ry="2" fill="#2e2419" opacity=".2" stroke="none"/>';
+  function books(x0, y0, y1, list) {
+    var s = '', x = x0;
+    list.forEach(function (b) { s += '<rect x="' + x + '" y="' + (y1 - b[0]) + '" width="' + b[1] + '" height="' + b[0] + '" fill="' + b[2] + '"/>'; x += b[1]; });
+    return s;
+  }
+  var A = {};
+
+  A.chaise = SH +
+    '<rect x="10" y="3.5" width="3" height="23" rx="1" fill="#a8683a"/><rect x="27" y="3.5" width="3" height="23" rx="1" fill="#a8683a"/>' +
+    '<rect x="13" y="5.5" width="14" height="3.6" rx="1" fill="#c98d52"/><rect x="13" y="11.8" width="14" height="3.6" rx="1" fill="#c98d52"/>' +
+    '<rect x="8.5" y="26" width="3.2" height="10" rx="1" fill="#a8683a"/><rect x="28.3" y="26" width="3.2" height="10" rx="1" fill="#a8683a"/>' +
+    '<rect x="7" y="21.2" width="26" height="5.6" rx="2.2" fill="#d4604f"/><path d="M9 23.2h22" stroke="#f08a78" stroke-width="1" fill="none"/>';
+
+  A.canape = SH +
+    '<rect x="6" y="7" width="28" height="17" rx="4.5" fill="#b4493b"/>' +
+    '<rect x="2" y="15" width="8.5" height="17.5" rx="3.6" fill="#9a3a2f"/><rect x="29.5" y="15" width="8.5" height="17.5" rx="3.6" fill="#9a3a2f"/>' +
+    '<rect x="9" y="20.5" width="22" height="10.5" rx="2.8" fill="#cc5c4b"/><path d="M20 21v9.8" fill="none" stroke="#9a3a2f"/>' +
+    '<rect x="4" y="32.5" width="3.2" height="3.6" rx="1" fill="#5e3a1c"/><rect x="32.8" y="32.5" width="3.2" height="3.6" rx="1" fill="#5e3a1c"/>' +
+    '<rect x="11.5" y="13.5" width="7.5" height="7.5" rx="2" fill="#f2c75c" transform="rotate(-9 15 17)"/>';
+
+  A.lit = SH +
+    '<rect x="4" y="4.5" width="32" height="15" rx="3" fill="#8a5226"/><rect x="6.5" y="7" width="27" height="10" rx="2" fill="#a56a35" stroke="none"/>' +
+    '<rect x="5" y="16" width="30" height="17" rx="2.5" fill="#f4eddd"/>' +
+    '<path d="M5 24.5h30v6.5q0 2-2 2H7q-2 0-2-2z" fill="#4a78b0"/><path d="M5 27.3h30" stroke="#a6c3e8" stroke-width="1.2" fill="none"/>' +
+    '<rect x="8" y="14.2" width="11.5" height="7.2" rx="3.2" fill="#ffffff"/><rect x="21" y="14.2" width="11.5" height="7.2" rx="3.2" fill="#ffffff"/>' +
+    '<rect x="4.5" y="33" width="3.4" height="3.6" rx="1" fill="#5e3a1c"/><rect x="32.1" y="33" width="3.4" height="3.6" rx="1" fill="#5e3a1c"/>';
+
+  A.plante = SH +
+    '<path d="M20 27C20 21 19.5 17 20 11" fill="none" stroke="#2f7d3b" stroke-width="1.6"/>' +
+    '<path d="M20 26C10 26.5 5.5 18.5 7.5 10.5C16 11 20.5 17.5 20 26z" fill="#3fa653"/>' +
+    '<path d="M20 26C30 26.5 34.5 18.5 32.5 10.5C24 11 19.5 17.5 20 26z" fill="#4cb860"/>' +
+    '<path d="M20 21C13.5 18.5 13.5 9 20 2.5C26.5 9 26.5 18.5 20 21z" fill="#2f9447"/>' +
+    '<path d="M20 20V6M20 24L10 14M20 24L30 14" fill="none" stroke="#1f6b32" stroke-width=".8" opacity=".7"/>' +
+    '<path d="M12.2 26.5h15.6l-2.2 9.6H14.4z" fill="#c4623a"/><rect x="11" y="24.6" width="18" height="3.6" rx="1.2" fill="#dc7a4e"/>';
+
+  A.lampe = '<circle cx="20" cy="13" r="14" fill="#ffe58a" opacity=".38" stroke="none"/>' + SH +
+    '<rect x="19" y="17" width="2.2" height="17" fill="#6b5b4a"/><ellipse cx="20" cy="34.6" rx="7" ry="2.2" fill="#4a3f36"/>' +
+    '<path d="M11.5 18L15 5h10l3.5 13z" fill="#f7d768"/><path d="M15 5h10l.8 3H14.2z" fill="#fff0a8" stroke="none"/><ellipse cx="20" cy="18" rx="8.5" ry="1.6" fill="#e3bb3f"/>';
+
+  A.etagere = SH +
+    '<rect x="6" y="2.5" width="28" height="34" rx="1.5" fill="#8a5a30"/><rect x="8" y="4.5" width="24" height="30" fill="#5a3a1d" stroke="none"/>' +
+    books(8.6, 4.5, 14, [[8.5, 2.6, '#c8453b'], [9.5, 2.2, '#3f7ccf'], [7.5, 3, '#e0b43b'], [9, 2.4, '#3f9d4f'], [8, 2.8, '#8b5cc7'], [9.5, 2.4, '#d9822b'], [7, 2.6, '#3f7ccf'], [8.8, 2.8, '#c8453b']]).replace(/<rect /g, '<rect stroke="none" ') +
+    '<rect x="8" y="14" width="24" height="1.8" fill="#b07a45" stroke="none"/>' +
+    books(8.6, 15.8, 24.2, [[7.5, 2.6, '#3f9d4f'], [8.2, 2.4, '#e0b43b'], [6.8, 3, '#c8453b'], [8.2, 2.6, '#3f7ccf'], [7.2, 2.4, '#8b5cc7'], [8.4, 3, '#d9822b'], [7, 2.6, '#3f9d4f'], [8, 2.2, '#c8453b']]).replace(/<rect /g, '<rect stroke="none" ') +
+    '<rect x="8" y="24.2" width="24" height="1.8" fill="#b07a45" stroke="none"/>' +
+    books(8.6, 26, 34, [[7, 2.8, '#8b5cc7'], [7.8, 2.4, '#c8453b'], [6.6, 3.2, '#e0b43b'], [7.8, 2.6, '#3f7ccf'], [6.8, 2.6, '#3f9d4f'], [7.6, 2.4, '#c8453b'], [7, 3, '#d9822b'], [7.8, 2.4, '#3f7ccf']]).replace(/<rect /g, '<rect stroke="none" ');
+
+  A.tele = SH +
+    '<rect x="13" y="29" width="14" height="4" fill="#3a3a42"/><rect x="8" y="32.5" width="24" height="3" rx="1.2" fill="#4a4a52"/>' +
+    '<rect x="3.5" y="5" width="33" height="25" rx="3" fill="#23232b"/><rect x="6" y="7.5" width="28" height="20" rx="1.6" fill="#6cc6ee" stroke="none"/>' +
+    '<circle cx="27" cy="13.5" r="2.6" fill="#ffe58a" stroke="none"/><path d="M6 27.5l9-9.5 6 6 5-4 8 7.5z" fill="#3d9a54" stroke="none"/>' +
+    '<path d="M6 7.5h12L9 27.5H6z" fill="#ffffff" opacity=".22" stroke="none"/><circle cx="33" cy="29" r=".7" fill="#7bd88f" stroke="none"/>';
+
+  A.table = SH +
+    '<rect x="5.5" y="18" width="3.4" height="17.5" rx="1" fill="#a8683a"/><rect x="31.1" y="18" width="3.4" height="17.5" rx="1" fill="#a8683a"/>' +
+    '<rect x="8.5" y="18" width="23" height="3" fill="#b07a45"/><rect x="2.5" y="14.5" width="35" height="4.6" rx="1.8" fill="#d29a5b"/>' +
+    '<ellipse cx="13" cy="13.6" rx="5.6" ry="1.8" fill="#ffffff"/><ellipse cx="13" cy="13.4" rx="3" ry=".9" fill="#e8e2d2" stroke="none"/>' +
+    '<rect x="26" y="7" width="4.4" height="7.5" rx="1.6" fill="#8fd0ea"/><path d="M28.2 7C26.5 4.5 27 3 28.2 2.5C29.4 3 29.9 4.5 28.2 7z" fill="#e0527a"/>' +
+    '<circle cx="31.2" cy="8" r="1.3" fill="#f2c75c" stroke="none"/>';
+
+  var keys = ''; for (var i = 0; i < 10; i++) keys += '<path d="M' + (7 + i * 2.6) + ' 23.5v4.5" stroke="#9a9a9a" stroke-width=".5" fill="none"/>';
+  var blacks = ''; [0, 1, 3, 4, 5, 7, 8].forEach(function (k) { blacks += '<rect x="' + (8.7 + k * 2.6) + '" y="23.5" width="1.6" height="2.8" fill="#23232b" stroke="none"/>'; });
+  A.piano = SH +
+    '<rect x="5" y="27" width="3.6" height="9" rx="1" fill="#2a2a33"/><rect x="31.4" y="27" width="3.6" height="9" rx="1" fill="#2a2a33"/>' +
+    '<rect x="2.5" y="4.5" width="35" height="3.4" rx="1.2" fill="#3a3a46"/><rect x="3.5" y="7.5" width="33" height="20" rx="1.6" fill="#2a2a33"/>' +
+    '<rect x="10.5" y="9.6" width="19" height="9" rx=".8" fill="#f4efe2" stroke="none"/><path d="M12.5 12.2h15M12.5 14.4h15M12.5 16.6h10" stroke="#8a8578" stroke-width=".6" fill="none"/>' +
+    '<rect x="5.5" y="22.5" width="29" height="5.6" fill="#ffffff" stroke="none"/>' + keys + blacks +
+    '<path d="M5.5 22.5h29" stroke="#2e2419" fill="none"/>';
+
+  A.voiture = SH.replace('rx="14"', 'rx="16"') +
+    '<path d="M2.5 27V21.5q0-2 2.3-2.6l6.2-1.6 3-5q1-1.3 3-1.3h9.5q2 0 3.4 1.4l3 4.8 3.4 1.2q2.2.8 2.2 3v8.1z" fill="#d6453a"/>' +
+    '<path d="M14.5 17l2.4-4.1h4.1V17z" fill="#bfe6f2"/><path d="M22.5 12.9h4.5l3.2 4.1H22.5z" fill="#bfe6f2"/>' +
+    '<path d="M21.7 12.5V25" fill="none" stroke="#a83228"/><rect x="23" y="21.3" width="3.4" height="1.2" rx=".6" fill="#a83228" stroke="none"/>' +
+    '<circle cx="35.4" cy="21.8" r="1.6" fill="#ffe58a"/><rect x="2.5" y="22" width="2.2" height="2.4" fill="#ffb3ab" stroke="none"/>' +
+    '<circle cx="11" cy="27.2" r="4.4" fill="#23232b"/><circle cx="11" cy="27.2" r="1.9" fill="#c4cbd6" stroke="none"/>' +
+    '<circle cx="29.5" cy="27.2" r="4.4" fill="#23232b"/><circle cx="29.5" cy="27.2" r="1.9" fill="#c4cbd6" stroke="none"/>';
+
+  A.aquarium = SH +
+    '<rect x="5.5" y="30" width="29" height="6.4" rx="1" fill="#5a4030"/><rect x="8" y="32" width="24" height="2.4" fill="#6f5139" stroke="none"/>' +
+    '<rect x="3" y="7" width="34" height="3.4" rx="1.2" fill="#34495e"/>' +
+    '<rect x="4" y="10" width="32" height="20.4" rx="1.5" fill="#8fd8ec"/>' +
+    '<path d="M4.5 26.5q15.5-2.6 31 0v3.4H4.5z" fill="#e8d199" stroke="none"/>' +
+    '<path d="M10.5 27C8 21.5 8.6 17 11.5 14c.8 4.5 1.4 8.5.8 13z" fill="#3fa653"/><path d="M30 27c-1.6-4.5-1-8 1.2-10.6 1 4 1.2 7 .6 10.6z" fill="#46b35a"/>' +
+    '<ellipse cx="21.5" cy="17.5" rx="4.6" ry="2.9" fill="#ff8a3d"/><path d="M25.7 17.5l4.6-3.2v6.4z" fill="#ff8a3d"/><circle cx="19.2" cy="16.8" r=".8" fill="#222" stroke="none"/>' +
+    '<ellipse cx="15.5" cy="23.2" rx="2.9" ry="1.8" fill="#ffd23d" stroke-width=".8"/><path d="M18.2 23.2l2.6-1.8v3.6z" fill="#ffd23d" stroke-width=".8"/>' +
+    '<circle cx="27" cy="12.8" r="1" fill="none" stroke="#fff" opacity=".85"/><circle cx="29" cy="14.6" r=".7" fill="none" stroke="#fff" opacity=".85"/>' +
+    '<rect x="6.2" y="12" width="2" height="12" rx="1" fill="#fff" opacity=".4" stroke="none"/>';
+
+  A.statue = SH +
+    '<rect x="9" y="27.5" width="22" height="3.2" rx="1" fill="#cdc5b5"/><rect x="11" y="30.5" width="18" height="6" fill="#b8b0a0"/>' +
+    '<path d="M9.5 28q-.5-8 10.5-9.4Q30.5 20 30.5 28z" fill="#d6cfbf"/><path d="M14 27.5l3-7M26 27.5l-3-7M20 28v-8" fill="none" stroke="#a39b88" stroke-width=".8"/>' +
+    '<rect x="17.6" y="14.5" width="4.8" height="5" rx="1" fill="#ddd6c8"/>' +
+    '<circle cx="20" cy="10.3" r="5.4" fill="#e6dfd0"/><path d="M14.6 9.6Q15 3.8 20 4.4 25 3.8 25.4 9.6 22.6 6.8 20 7.2 17.4 6.8 14.6 9.6z" fill="#bdb5a3"/>' +
+    '<path d="M20 9.2v3.2h-1.2" fill="none" stroke="#9a927f" stroke-width=".8"/><path d="M17.2 9.2h1.4M21.4 9.2h1.4" stroke="#7d7564" stroke-width=".9" fill="none"/>';
+
+  A.horloge = SH +
+    '<rect x="9" y="32.5" width="22" height="4.2" rx="1" fill="#8a5226"/>' +
+    '<rect x="11" y="15" width="18" height="18" fill="#a56a35"/>' +
+    '<path d="M9.5 17V8.5Q9.5 1.8 20 1.8T30.5 8.5V17z" fill="#b87a40"/>' +
+    '<circle cx="20" cy="10" r="6.4" fill="#f6efd9"/><path d="M20 4.9v1.2M20 14v1.2M14.9 10h1.2M23.9 10h1.2" stroke="#6b5a3a" stroke-width=".8" fill="none"/>' +
+    '<path d="M20 10V6.2M20 10l3 1.6" stroke="#222" stroke-width="1.2" fill="none"/>' +
+    '<rect x="14.4" y="19.3" width="11.2" height="12.4" rx="1.4" fill="#5e3a1c"/><rect x="15.6" y="20.5" width="8.8" height="10" fill="#d9b878" opacity=".5" stroke="none"/>' +
+    '<path d="M20 20.8v6.8" stroke="#d4a437" stroke-width="1" fill="none"/><circle cx="20" cy="28.6" r="2.2" fill="#e6b94a"/>';
+
+  A.cactus = SH +
+    '<path d="M16.5 27V11.5q0-3.5 3.5-3.5t3.5 3.5V27z" fill="#3f9d4f"/>' +
+    '<path d="M16.5 21H12q-2.5 0-2.5-2.8V14q0-1.8 1.9-1.8t1.9 1.8v3.2q0 1 1 1h2.2z" fill="#4cae5c"/>' +
+    '<path d="M23.5 17h2.6q2 0 2-2v-3.6q0-1.8 1.8-1.8t1.8 1.8V16q0 3.8-3.8 3.8h-4.4z" fill="#4cae5c"/>' +
+    '<path d="M20 9v18" fill="none" stroke="#2e7a3b" stroke-width=".8"/><path d="M18 12v.01M22 14v.01M18.4 19v.01M21.8 22v.01M11.6 15.4v.01M29.6 12.8v.01" stroke="#e9f7d0" stroke-width="1.1" fill="none"/>' +
+    '<circle cx="20" cy="6.8" r="2.1" fill="#ff7aa8"/><circle cx="20" cy="6.8" r=".8" fill="#ffe58a" stroke="none"/>' +
+    '<path d="M12.8 27.6h14.4l-2 8.8h-10.4z" fill="#c4623a"/><rect x="11.6" y="25.8" width="16.8" height="3.4" rx="1.2" fill="#dc7a4e"/>';
+
+  A.bar = SH +
+    '<rect x="7.5" y="9.5" width="4.2" height="9" rx="1" fill="#2f9b5a"/><rect x="8.8" y="4.5" width="1.6" height="5.5" fill="#2f9b5a"/>' +
+    '<rect x="13.2" y="8" width="4.2" height="10.5" rx="1" fill="#c7852b"/><rect x="14.5" y="3.5" width="1.6" height="5" fill="#c7852b"/>' +
+    '<rect x="18.8" y="10" width="4" height="8.5" rx="1" fill="#cfe9f5"/><rect x="19.9" y="5.6" width="1.6" height="4.6" fill="#cfe9f5"/>' +
+    '<path d="M25.5 8h9l-4.5 6.4z" fill="#ff9f43"/><path d="M30 14.4v4" fill="none"/><path d="M27.6 18.4h4.8" fill="none"/><circle cx="33" cy="7.4" r="1.4" fill="#d6283a"/>' +
+    '<rect x="2.5" y="17.6" width="35" height="4.6" rx="1.8" fill="#d29a5b"/>' +
+    '<rect x="4" y="22" width="32" height="13.8" fill="#7b4a26"/><rect x="7" y="25" width="10.4" height="8" rx="1" fill="#935c32" stroke-width=".8"/><rect x="22.6" y="25" width="10.4" height="8" rx="1" fill="#935c32" stroke-width=".8"/>' +
+    '<path d="M4 35h32" stroke="#e0b64a" stroke-width="1.6" fill="none"/>';
+
+  A.malle = SH +
+    '<rect x="4.5" y="20" width="31" height="15.5" rx="1.6" fill="#9a5d2e"/>' +
+    '<path d="M4.5 20.5v-4.2Q4.5 8.6 20 8.6t15.5 7.7v4.2z" fill="#b4733b"/>' +
+    '<rect x="10.5" y="9.4" width="3.2" height="26" fill="#4d3019"/><rect x="26.3" y="9.4" width="3.2" height="26" fill="#4d3019"/>' +
+    '<path d="M4.5 20.2h31" fill="none" stroke="#4d3019" stroke-width="1.4"/>' +
+    '<rect x="4.5" y="30.5" width="4" height="5" fill="#e0b64a" stroke="none"/><rect x="31.5" y="30.5" width="4" height="5" fill="#e0b64a" stroke="none"/>' +
+    '<rect x="17" y="17.6" width="6" height="6.4" rx="1.2" fill="#f0c95a"/><circle cx="20" cy="20.2" r=".9" fill="#2e2419" stroke="none"/><path d="M20 20.4v1.8" stroke="#2e2419" stroke-width=".9" fill="none"/>';
+
+  var sprite = '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>';
+  Object.keys(A).forEach(function (k) { sprite += '<symbol id="o-' + k + '" viewBox="0 0 40 40"><g ' + OL + '>' + A[k] + '</g></symbol>'; });
+  sprite += '</defs></svg>';
+  return { sprite: sprite, icon: function (k, cls) { return '<svg class="' + (cls || 'obj') + '" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><use href="#o-' + k + '"/></svg>'; }, keys: Object.keys(A) };
+})();
+
+  document.body.insertAdjacentHTML('afterbegin', ART.sprite);
+  /* Sol de chaque pièce : motif, couleur principale, couleur du motif. Chaque décor a ses teintes bien distinctes. */
+  var FLOORS = {
+    'Cuisine': ['checker', '#fbeeae', '#f0d46c'], 'Salon': ['planks', '#eab577', '#cf9350'], 'Bibliothèque': ['carpet', '#e9a3ad', '#d4808c'],
+    'Cave': ['bricks', '#b3bccd', '#8f9ab0'], 'Véranda': ['checker', '#a4e6df', '#6ccbc3'], 'Chambre': ['carpet', '#d8c0f4', '#b99be3'],
+    'Bureau': ['planks', '#c99a72', '#a8774d'], 'Jardin': ['grass', '#a9de74', '#82c350'],
+    'Salle de jeu': ['felt', '#6fcb9d', '#4aa97c'], 'Bar': ['planks', '#b98558', '#8f6038'], 'Vestiaire': ['checker', '#bcd7f8', '#93b9ea'],
+    'Terrasse': ['paving', '#e6d9c4', '#c4b296'], 'Coffre-fort': ['diamond', '#a7b4c5', '#8191a8'], 'Scène': ['stripes', '#ee93b4', '#dd6b97'], 'Fumoir': ['carpet', '#d3b4e2', '#b48ccb'],
+    'Hall': ['checker', '#eef1f6', '#cfd6e2'], 'Galerie': ['planks', '#ebbc7c', '#d19b55'], 'Atelier': ['speckle', '#e9d878', '#c9b63f'], 'Boutique': ['carpet', '#a9c6f6', '#7ea6ea'],
+    'Réserve': ['planks', '#c19268', '#9a6a40'], 'Café': ['checker', '#f4a99a', '#e17f6c'], 'Crypte': ['bricks', '#aaa4c8', '#8780ae'],
+    'Pont': ['planks', '#d9b98c', '#b8935f'], 'Cabine': ['carpet', '#f0b5a0', '#d98d74'], 'Salle des machines': ['diamond', '#b9c0c9', '#8e98a6'],
+    'Salle de bal': ['checker', '#f3c1d6', '#e594b8'], 'Infirmerie': ['paving', '#cfeee6', '#9fd9c9'], 'Passerelle': ['bricks', '#a8c8ee', '#7ea9de'], 'Cale': ['bricks', '#a69a8a', '#82766a'],
+    'Accueil': ['checker', '#e7eef8', '#c5d4ea'], 'Urgences': ['paving', '#f3a79c', '#e0786a'], 'Bloc opératoire': ['checker', '#8fd8cf', '#5fbfb4'], 'Pharmacie': ['carpet', '#c7e59a', '#a2cf68'],
+    'Laboratoire': ['diamond', '#d7d0a8', '#b9ae72'], 'Cafétéria': ['checker', '#f9d3a0', '#f0b362'], 'Radiologie': ['felt', '#8fa1c9', '#6a7fb0'],
+    'Amphithéâtre': ['stripes', '#c7b6ea', '#a48ed6'], 'Gymnase': ['stripes', '#f2e07a', '#dcc43b'], 'Résidence': ['carpet', '#9fd0e8', '#74b4d6'], 'Secrétariat': ['speckle', '#d5d9e2', '#aeb6c6']
+  };
+  var SHORT = { 'Salle des machines': 'Machines', 'Bloc opératoire': 'Bloc op.' };
+  function labelName(n) { return SHORT[n] || n; }
+  var FALLBACK = ['carpet', '#dddddd', '#bbbbbb'];
+  function floorOf(name) { return FLOORS[name] || FALLBACK; }
+  var $ = function (s, el) { return (el || document).querySelector(s); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var KEY = 'alibi.v4';
+  var mem = null;
+  function load() { try { var v = JSON.parse(localStorage.getItem(KEY) || 'null'); if (v) return v; } catch (e) {} return mem; }
+  function persist() {
+    var data = { settings: S.settings, cards: S.cards, order: S.order, current: S.current, tut: S.tut, streak: S.streak };
+    mem = data;
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+  }
+  var S = load() || {};
+  S.settings = Object.assign({ N: 6, D: 2, T: 'M', measured: false, tutDone: false, aidLines: true, aidCheck: false, aidCand: false }, S.settings || {});
+  S.settings.anim = S.settings.anim || {};
+  S.streak = S.streak || { last: '', n: 0 };
+  S.cards = S.cards || {}; S.order = S.order || []; S.current = S.current || null;
+
+  var DNAMES = { 1: 'Facile', 2: 'Moyen', 3: 'Difficile' };
+  function levelLabel(x) { return DNAMES[x.D] + (x.measured ? ' (mesuré)' : ''); }
+  var TUTO = '4AM-1ZENVS';
+  var INTRO = [
+    ['Une victime, des suspects', 'Quelqu’un a été retrouvé sans vie. Votre but : trouver le coupable, c’est-à-dire le seul suspect qui se trouvait dans la même pièce que la victime.'],
+    ['Le plan', 'Chaque pièce a son sol et son nom écrit sur le plan. Les traits épais sont les murs. Les meubles bloquent leur case, sauf les chaises, canapés et lits où l’on peut s’installer.'],
+    ['Les règles de placement', 'Il y a une personne par ligne et par colonne. Un seul suspect par pièce. La victime n’a aucun indice : elle prend la dernière case libre, toute seule.'],
+    ['Les indices', 'Chaque suspect a ses indices, juste sous le plan. Ils parlent de pièces, de meubles, de fenêtres… Touchez un suspect pour les lire, puis une case pour le placer. Je vous guide pas à pas.']
+  ];
+  var hs = null, tgtCell = -1, replay = -1, showBio = false, stepsCache = {};
+  /* ----- Animations : une clé par effet, tous réglables dans les réglages ----- */
+  var ANIMS = [
+    ['Plan', [
+      ['place', 'Pose d’un personnage', 'Le jeton tombe sur la case avec un rebond et une onde.'],
+      ['remove', 'Retrait', 'Le jeton s’envole et s’efface.'],
+      ['wave', 'Cases grisées en cascade', 'Les cases écartées se grisent en vague autour du jeton.'],
+      ['cross', 'Croix et notes', 'La croix se dessine, les initiales apparaissent avec un zoom.'],
+      ['shake', 'Case bloquée', 'La case et le meuble tremblent quand on essaie d’y poser quelqu’un.'],
+      ['conflict', 'Conflit', 'Les personnages en conflit pulsent en rouge.'],
+      ['victim', 'Victime', 'La victime glisse jusqu’à sa case avec un halo.'],
+      ['roomhover', 'Pièces', 'La pièce se met en relief au survol, et brille quand on y pose un jeton.']
+    ]],
+    ['Indices et enquête', [
+      ['hint', 'Indice progressif', 'Le suspect pulse, la pièce respire, puis le jeton vole jusqu’à sa case.'],
+      ['check', 'Pointer les indices', 'Les ✓ et ✕ apparaissent avec un pop, l’indice glisse.'],
+      ['suspect', 'Changement de suspect', 'Le dossier apparaît en fondu, la sélection rebondit.'],
+      ['verify', 'Vérifier mes placements', 'Les placements justes s’illuminent en vert, les faux tremblent.']
+    ]],
+    ['Fin de partie', [
+      ['accuse', 'Accusation', 'Les suspects se retournent comme des cartes, le tampon frappe, le coupable a un halo.'],
+      ['win', 'Victoire', 'Confettis et compteurs qui montent.'],
+      ['wrong', 'Mauvaise accusation', 'Le suspect accusé se secoue.'],
+      ['replay', 'Rejeu du raisonnement', 'Chaque personnage tombe sur sa case à l’étape correspondante.']
+    ]],
+    ['Interface', [
+      ['tabs', 'Changement d’onglet', 'Glissement de la page et pastille sous l’onglet actif.'],
+      ['generate', 'Génération d’une carte', 'Le plan se dessine case par case, avec un indicateur d’attente.'],
+      ['sheets', 'Fenêtres', 'Ouverture et fermeture avec un léger ressort.'],
+      ['buttons', 'Boutons et interrupteurs', 'Enfoncement à l’appui, interrupteurs élastiques.'],
+      ['list', 'Liste des cartes', 'Les cartes glissent à l’entrée et se replient à la suppression.']
+    ]],
+    ['Initiation', [
+      ['coach', 'Guide', 'Bulles qui apparaissent, flèche qui rebondit, félicitations.']
+    ]],
+    ['Ambiance', [
+      ['ambiance', 'Ambiance du lieu', 'Un effet propre à chaque lieu, à l’extérieur du plan : orage (manoir), symboles de cartes (casino), lasers d’alarme (musée), bulles (paquebot), électrocardiogramme (hôpital), feuilles d’automne (campus).'],
+      ['windows', 'Reflets aux fenêtres', 'Un reflet passe de temps en temps sur les fenêtres.'],
+      ['daily', 'Carte du jour', 'Éclat sur la carte du jour et flamme de la série.']
+    ]]
+  ];
+  var ANIM_KEYS = []; ANIMS.forEach(function (g) { g[1].forEach(function (a) { ANIM_KEYS.push(a[0]); }); });
+  function animOn(k) { return !S.settings.anim || S.settings.anim[k] !== false; }
+  function applyAnim() { ANIM_KEYS.forEach(function (k) { document.body.classList.toggle('an-' + k, animOn(k)); }); }
+  var curPop = {}, fx = {}, curFx = {}, lastDim = null, lastClue = {}, lastClueCode = '', listFx = false, closeTimer = null;
+  function fxSet(key, name, val) { if (animOn(key)) fx[name] = val; }
+  function phase(per, off) { return '-' + (((Date.now() / 1000) + (off || 0)) % per).toFixed(2) + 's'; }
+  function sigOf(c) { return c.place.join(','); }
+  function cap1(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
+  var STATUS = { 'new': 'Nouvelle', playing: 'En cours', solved: 'Résolue', revealed: 'Solution vue' };
+  var tab = 'play', puz = null, sel = null, mode = 'place', flash = {}, msgText = '', msgKind = '', undoStack = [], sheet = null, confirmClear = false;
+  var cache = {};
+
+  function getPuz(code) { if (!cache[code]) cache[code] = generate(code); return cache[code]; }
+  function card() { var c = S.current ? S.cards[S.current] : null; if (c && !c.notes) c.notes = {}; return c; }
+  function fmtTime(t) { t = Math.max(0, t | 0); var m = Math.floor(t / 60), s = t % 60; return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s; }
+  function ymd(d) { return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function yesterdayStr() { var y = new Date(); y.setDate(y.getDate() - 1); return ymd(y); }
+  function streakNow() { var t = localDate(); return (S.streak.last === t || S.streak.last === yesterdayStr()) ? S.streak.n : 0; }
+  function updateStreak() { var t = localDate(); if (S.streak.last === t) return; S.streak.n = S.streak.last === yesterdayStr() ? S.streak.n + 1 : 1; S.streak.last = t; }
+  function localDate() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function shortDate(ts) { try { return new Date(ts).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }); } catch (e) { return ''; } }
+  function locked() { var c = card(); return !!c && (c.status === 'solved' || c.status === 'revealed'); }
+  function toast(t) {
+    var old = $('.toast'); if (old) old.remove();
+    var el = document.createElement('div'); el.className = 'toast'; el.setAttribute('role', 'status'); el.textContent = t;
+    document.body.appendChild(el); setTimeout(function () { el.remove(); }, 2600);
+  }
+  function setMsg(t, kind) { msgText = t || ''; msgKind = kind || ''; var m = $('#msg'); if (m) { m.textContent = msgText; m.className = 'msg' + (kind ? ' ' + kind : ''); } }
+
+  /* ---------- Ouverture d'une carte ---------- */
+  function openCard(raw, goPlay) {
+    var pc = parseCode(raw);
+    if (!pc) return false;
+    var p = getPuz(pc.code);
+    if (!p) { toast('Cette carte n’a pas pu être générée. Essayez un autre code.'); return false; }
+    puz = p; S.current = pc.code;
+    var created = !S.cards[pc.code];
+    if (created) {
+      S.cards[pc.code] = { code: pc.code, created: Date.now(), status: 'new', time: 0, hints: 0, wrong: 0, place: new Array(p.N).fill(-1), marks: [], notes: {} };
+    }
+    S.order = [pc.code].concat(S.order.filter(function (c) { return c !== pc.code; }));
+    if (S.order.length > 40) {
+      var drop = S.order.slice(40); S.order = S.order.slice(0, 40);
+      drop.forEach(function (c) { if (c !== S.current) delete S.cards[c]; });
+    }
+    undoStack = []; flash = {}; mode = 'place'; msgText = ''; msgKind = ''; hs = null; replay = -1; lastDim = null; lastClue = {}; lastClueCode = '';
+    if (created) fxSet('generate', 'draw', true);
+    var c = S.cards[pc.code];
+    sel = null; for (var i = 1; i < p.N; i++) { if (c.place[i] < 0) { sel = i; break; } } if (sel === null) sel = 1;
+    persist();
+    if (goPlay !== false) setTab('play'); else renderAll();
+    return true;
+  }
+
+  /* ---------- Onglets ---------- */
+  function setTab(t) {
+    var prev = tab, order = ['cartes', 'play', 'regles'];
+    tab = t;
+    if (t === 'cartes' && prev !== 'cartes' && animOn('list')) listFx = true;
+    ['cartes', 'play', 'regles'].forEach(function (k) { $('#view-' + k).hidden = (k !== t); });
+    document.querySelectorAll('.tabbar button').forEach(function (b) { b.setAttribute('aria-current', b.dataset.tab === t ? 'page' : 'false'); });
+    try { history.replaceState(null, '', '#' + t); } catch (e) {}
+    renderAll(); window.scrollTo(0, 0);
+    if (animOn('tabs') && prev !== t) {
+      var v = $('#view-' + t); v.style.setProperty('--dx', (order.indexOf(t) > order.indexOf(prev) ? 26 : -26) + 'px');
+      v.classList.remove('view-in'); void v.offsetWidth; v.classList.add('view-in');
+      setTimeout(function () { v.classList.remove('view-in'); }, 420);
+    }
+  }
+  function renderAll() {
+    if (tab === 'cartes') renderCartes();
+    else if (tab === 'play') renderPlay();
+    else renderRules();
+    updateTimer();
+  }
+
+  /* ---------- Vue Cartes ---------- */
+  function segHTML(name, items, cur) {
+    return items.map(function (it) {
+      return '<button type="button" role="radio" aria-checked="' + (String(cur) === String(it[0])) + '" data-act="' + name + '" data-v="' + it[0] + '">' + it[1] + '</button>';
+    }).join('');
+  }
+  function renderCartes() {
+    var s = S.settings;
+    $('#segN').innerHTML = segHTML('setN', [5, 6, 7, 8, 9].map(function (n) { return [n, n + '×' + n]; }), s.N);
+    $('#segD').innerHTML = segHTML('setD', [[1, 'Facile'], [2, 'Moyen'], [3, 'Difficile']], s.D);
+    $('#segT').innerHTML = segHTML('setT', THEME_KEYS.split('').map(function (k) { return [k, THEMES[k].name]; }), s.T);
+    var om = $('#optMeasured'); om.setAttribute('aria-pressed', String(!!s.measured));
+    $('#measuredNote').textContent = s.measured
+      ? 'Activée : le niveau est calculé d’après le raisonnement réellement nécessaire. Facile : cases uniques et pièces. Moyen : il faut croiser deux indices. Difficile : il faut faire des hypothèses.'
+      : 'Désactivée : le niveau choisit seulement les types d’indices (plus de relations et d’exclusions en Moyen et Difficile).';
+    $('#tutoPanel').className = 'panel' + (S.settings.tutDone ? ' done' : '');
+    $('#tutoPanel').innerHTML = '<span class="lbl">Initiation</span><div><h3>Première enquête ?</h3><p class="gen-note">Une mini-carte 4×4 résolue pas à pas : le plan, les indices, puis l’accusation. Environ deux minutes.</p></div><button class="btn' + (S.settings.tutDone ? '' : ' primary') + '" data-act="tuto">' + (S.settings.tutDone ? 'Refaire l’initiation' : 'Lancer l’initiation') + '</button>';
+    $('#genNote').textContent = (s.N - 1) + ' suspects, 1 victime, ' + roomCountFor(s.N) + ' pièces.';
+    var dc = dailyCode(localDate()), dp = parseCode(dc), dcard = S.cards[dc];
+    var dstat = dcard ? STATUS[dcard.status] + (dcard.status === 'solved' ? ' en ' + fmtTime(dcard.time) : '') : 'Pas encore jouée';
+    $('#daily').innerHTML = '<span class="lbl">Carte du jour</span><div><h3>' + new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) + '</h3>' +
+      '<p class="gen-note">' + THEMES[dp.T].name + ' · ' + dp.N + '×' + dp.N + ' · ' + levelLabel(dp) + ' · ' + dstat + '</p>' + (streakNow() > 0 ? '<p class="streak"><svg class="flame" viewBox="0 0 20 24" aria-hidden="true"><path d="M10 1c1 4 6 6 6 12a6 6 0 01-12 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3C8 8 8 4 10 1z" fill="#f08a1f" stroke="#c2410c" stroke-width="1.2" stroke-linejoin="round"/><path d="M10 12c.6 2 3 2.8 3 5.2a3 3 0 01-6 0c0-1.4 1-2 1.5-2.8.3 1 1 1.4 1.5 1.4-.2-1.6-.3-2.7 0-3.8z" fill="#ffd45a"/></svg>' + streakNow() + (streakNow() > 1 ? ' jours' : ' jour') + ' d’affilée</p>' : '') + '</div>' +
+      '<button class="btn" data-act="daily">' + (dcard && dcard.status !== 'new' ? 'Reprendre la carte du jour' : 'Jouer la carte du jour') + '</button>';
+    var list = $('#list');
+    if (!S.order.length) {
+      list.innerHTML = '<div class="empty">Aucune carte pour l’instant. Générez-en une ci-dessus : elle apparaîtra ici avec votre temps et le nombre d’indices utilisés.</div>';
+    } else {
+      var lfx = listFx; listFx = false;
+      list.innerHTML = S.order.map(function (code, idx) {
+        var c = S.cards[code]; if (!c) return '';
+        var pc = parseCode(code);
+        var badge = '<span class="badge ' + c.status + '">' + STATUS[c.status] + (c.status === 'solved' ? ' · ' + fmtTime(c.time) : c.status === 'playing' ? ' · ' + fmtTime(c.time) : '') + '</span>';
+        return '<button class="card-row' + (lfx ? ' fx-rowin' : '') + '" style="--i:' + idx + '" data-act="openCard" data-code="' + code + '" aria-current="' + (code === S.current) + '"><span class="mini">' + pc.N + '×' + pc.N + '</span>' +
+          '<span class="info"><span class="code">' + code + '</span><small>' + THEMES[pc.T].name + ' · ' + levelLabel(pc) + ' · ' + shortDate(c.created) + '</small></span>' + badge + '</button>';
+      }).join('');
+    }
+    $('#histTools').innerHTML = S.order.length ? '<button class="btn ghost small" data-act="' + (confirmClear ? 'clearYes' : 'clear') + '">' + (confirmClear ? 'Confirmer : tout effacer' : 'Vider l’historique') + '</button>' : '';
+  }
+
+  /* ---------- Vue Enquête ---------- */
+  function derive(c) {
+    var N = puz.N, pos = c.place, at = {}, rowCount = new Array(N).fill(0), colCount = new Array(N).fill(0), roomOcc = {};
+    pos.forEach(function (cell, i) {
+      if (cell < 0) return;
+      at[cell] = i; rowCount[(cell / N) | 0]++; colCount[cell % N]++;
+      if (i > 0) { var rm = puz.roomOf[cell]; (roomOcc[rm] = roomOcc[rm] || []).push(i); }
+    });
+    var conflict = {};
+    pos.forEach(function (cell, i) {
+      if (cell < 0) return;
+      if (rowCount[(cell / N) | 0] > 1 || colCount[cell % N] > 1) conflict[i] = true;
+      if (i > 0 && roomOcc[puz.roomOf[cell]].length > 1) conflict[i] = true; // un seul suspect par pièce
+    });
+    var placed = pos.filter(function (x) { return x >= 0; }).length;
+    var full = placed === N, allOK = false;
+    if (full && !Object.keys(conflict).length) allOK = puz.clues.every(function (cl) { return evalClue(puz, cl, pos); });
+    return { at: at, rowCount: rowCount, colCount: colCount, roomOcc: roomOcc, conflict: conflict, placed: placed, full: full, allOK: allOK };
+  }
+  function tok(i, cls) { var p = puz.persons[i]; return '<span class="tok p' + (i % 9) + (i === 0 ? ' vic' : '') + (cls ? ' ' + cls : '') + '" aria-hidden="true">' + esc(p.name.charAt(0)) + '</span>'; }
+  function posLabel(cell) { return puz.rooms[puz.roomOf[cell]].prep; }
+
+  /* Où écrire le nom de chaque pièce : sur la plus longue série de cases libres de la pièce, pour que le nom tienne. */
+  function labelPlan(N) {
+    var bw = Math.min(560, (document.documentElement.clientWidth || 390) - 32), cw = (bw - 12) / N;
+    var fs = Math.max(7.5, Math.min(12.5, cw * 0.21)), plan = {};
+    puz.rooms.forEach(function (rm, k) {
+      var need = (labelName(rm.name).length * fs * 0.58 + 10) / cw, best = -1, bs = -1e9, brun = 1;
+      for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) {
+        if (puz.roomOf[r * N + c] !== k) continue;
+        var run = 0; while (c + run < N && puz.roomOf[r * N + c + run] === k) run++;
+        var span = Math.min(run, Math.ceil(need)), objs = 0;
+        for (var j = 0; j < span; j++) if (puz.objs[r * N + c + j]) objs++;
+        var left = c > 0 && puz.roomOf[r * N + c - 1] === k;
+        var sc = Math.min(run, need) * 10 - objs * 5 - (left ? 6 : 0) - r * 0.15;
+        if (sc > bs) { bs = sc; best = r * N + c; brun = run; }
+      }
+      var size = need > brun ? Math.max(Math.min(fs, 7.5), fs * Math.max(brun / need, 0.82)) : fs;
+      plan[best] = { name: rm.name, fs: Math.round(size * 10) / 10 };
+    });
+    return plan;
+  }
+
+  function crossSVG(auto, draw) { return '<svg class="x' + (auto ? ' auto' : '') + (draw ? ' draw' : '') + '" viewBox="0 0 24 24" aria-hidden="true"><path class="o" d="M5 5L19 19M19 5L5 19"/><path class="i" d="M5 5L19 19M19 5L5 19"/></svg>'; }
+  function boardHTML(c, d) {
+    var N = puz.N, lk = locked(), lp = labelPlan(N), vars = '';
+    puz.rooms.forEach(function (rm, k) { var f = floorOf(rm.name); vars += '--a' + k + ':' + f[1] + ';--b' + k + ':' + f[2] + ';'; });
+    var winAt = {}, doorAt = {};
+    puz.windows.forEach(function (w) { (winAt[w.cell] = winAt[w.cell] || []).push(w.side); });
+    puz.doors.forEach(function (dr) { (doorAt[dr.cell] = doorAt[dr.cell] || []).push(dr.side); });
+    var hlRoom = (hs && hs.stage === 2 && hs.sig === sigOf(c) && hs.target) ? puz.roomOf[hs.target.cell] : -1;
+    var F = curFx, dimNow = {}, stp = Math.max(3, Math.round(520 / (N * N)));
+    var out = '<div class="boardwrap' + (F.shock ? ' fx-shock' : '') + '"><div class="board' + (F.draw ? ' fx-draw' : '') + '" style="--n:' + N + ';--stp:' + stp + 'ms;' + vars + '" role="grid" aria-label="Plan de la scène de crime">';
+    var selRow = -1, selCol = -1;
+    if (sel !== null && c.place[sel] >= 0) { selRow = (c.place[sel] / N) | 0; selCol = c.place[sel] % N; }
+    var cand = null;
+    if (S.settings.aidCand && sel !== null && !lk) {
+      cand = {};
+      for (var cell = 0; cell < N * N; cell++) {
+        if (isBlocked(puz, cell)) continue;
+        var r = (cell / N) | 0, cc = cell % N;
+        var rc = d.rowCount[r] - (r === selRow ? 1 : 0), ccn = d.colCount[cc] - (cc === selCol ? 1 : 0);
+        if (rc > 0 || ccn > 0) continue;
+        var ok = true;
+        for (var k = 0; k < puz.clues.length; k++) { var cl = puz.clues[k]; if (cl.p === sel && UNARY.has(cl.kind) && !evalUnary(puz, cl, cell)) { ok = false; break; } }
+        if (ok) cand[cell] = true;
+      }
+    }
+    for (var r2 = 0; r2 < N; r2++) {
+      for (var c2 = 0; c2 < N; c2++) {
+        var i = r2 * N + c2, rm = puz.roomOf[i], o = puz.objs[i], who = d.at[i];
+        var cls = 'cell r' + rm + ' pt-' + floorOf(puz.rooms[rm].name)[0];
+        if (r2 === 0 || puz.roomOf[i - N] !== rm) cls += ' wt';
+        if (c2 === 0 || puz.roomOf[i - 1] !== rm) cls += ' wl';
+        if (r2 === N - 1) cls += ' wb';
+        if (c2 === N - 1) cls += ' wr';
+        var blocked = o && !TYPES[o].occ;
+        var crossed = who === undefined && c.marks.indexOf(i) >= 0;
+        if (crossed) cls += ' crossed';
+        if (blocked) cls += ' blocked';
+        if (o && TYPES[o].occ) cls += ' seat';
+        if (who !== undefined) cls += ' has-tok';
+        if (S.settings.aidLines && !lk && who === undefined) {
+          var rr = d.rowCount[r2] - (r2 === selRow ? 1 : 0), cn = d.colCount[c2] - (c2 === selCol ? 1 : 0);
+          if (rr > 0 || cn > 0) cls += ' dim';
+        }
+        if (cand) { if (cand[i]) cls += ' cand'; else if (who === undefined) cls += ' dim'; }
+        if (flash[who] && who !== undefined) cls += ' flash';
+        if (hlRoom === rm && !lk) cls += ' hl';
+        if (tgtCell === i) cls += ' tgt';
+        if (F.room !== undefined && F.room === rm) cls += ' fx-room';
+        if (F.shake === i) cls += ' fx-shake';
+        var isDim = / dim\b/.test(cls);
+        if (isDim) {
+          dimNow[i] = true;
+          if (F.wave !== undefined && lastDim && !lastDim[i]) { var wd = Math.abs(((F.wave / N) | 0) - r2) + Math.abs((F.wave % N) - c2); cls += ' fx-wave'; var wdelay = Math.min(wd, 12) * 45; }
+        }
+        var inner = '';
+        if (F.place === i && who !== undefined && !F.noRipple) inner += '<i class="ripple" aria-hidden="true"></i>';
+        if (tgtCell === i && tutOn()) inner += '<i class="ptr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 11V5a1.6 1.6 0 013.2 0v5l5.3 1.4a2 2 0 011.4 2.4l-1.2 5.6a2 2 0 01-2 1.6H11a2 2 0 01-1.6-.8L5 14.6a1.6 1.6 0 012.5-2L9 14z" fill="#fff" stroke="#2e2419" stroke-width="1.4" stroke-linejoin="round"/></svg></i>';
+        if (winAt[i]) inner += winAt[i].map(function (sd) { return '<i class="win win-' + sd + '" style="--ds:' + phase(7, i * 1.7) + '" aria-hidden="true"></i>'; }).join('');
+        if (doorAt[i]) inner += doorAt[i].map(function (sd) { return '<i class="door door-' + sd + '" aria-hidden="true"></i>'; }).join('');
+        if (o) inner += ART.icon(o, 'obj');
+        if (who !== undefined) {
+          var tc = '';
+          if (lk && (who === puz.killer)) tc = 'kill';
+          else if (flash[who]) tc = 'bad';
+          else if (S.settings.aidLines && d.conflict[who]) tc = 'bad';
+          else if (who === sel && !lk) tc = 'sel';
+          if (F.place === i) tc += ' fx-drop';
+          if (F.okSet && F.okSet[who]) tc += ' fx-ok';
+          if (lk && who === puz.killer && F.halo) tc += ' fx-halo';
+          inner += tok(who, tc);
+        } else {
+          if (crossed) inner += crossSVG(false, F.cross === i);
+          else if (isDim) inner += crossSVG(true); // case écartée par une aide : croix grise automatique
+          var nl = c.notes[i];
+          if (nl && nl.length) inner += '<span class="notes' + (F.note === i ? ' pop' : '') + '" aria-hidden="true">' + nl.map(function (pp) { return '<i class="nt p' + (pp % 9) + (pp === sel ? ' me' : '') + '">' + esc(puz.persons[pp].name.charAt(0)) + '</i>'; }).join('') + '</span>';
+        }
+        if (lp[i]) inner += '<span class="rl" aria-hidden="true" style="font-size:' + lp[i].fs + 'px">' + esc(labelName(lp[i].name)) + '</span>';
+        var label = puz.rooms[rm].name + (o ? ', ' + TYPES[o].name : '') + (blocked ? ', case bloquée' : '') + (puz.hasWin[i] ? ', fenêtre' : '') + (puz.hasDoor[i] ? ', porte' : '') + (who !== undefined ? ', ' + puz.persons[who].name : '') + ', ligne ' + (r2 + 1) + ', colonne ' + (c2 + 1);
+        var sty = (F.draw ? '--i:' + i + ';' : '') + (wdelay !== undefined && / fx-wave\b/.test(cls) ? '--d:' + wdelay + 'ms;' : '');
+        out += '<button class="' + cls + '" data-act="cell" data-cell="' + i + '" aria-label="' + esc(label) + '"' + (sty ? ' style="' + sty + '"' : '') + (blocked ? ' aria-disabled="true"' : '') + '>' + inner + '</button>';
+      }
+    }
+    if (!lk) lastDim = dimNow;
+    return out + '</div>' + ambHTML(puz.theme) + '</div>';
+  }
+  /* ambiance du décor : un effet par lieu dans la marge du plan (derrière lui), jamais sur les cases.
+     Les délais reprennent l'heure courante pour que l'effet ne reparte pas de zéro à chaque rendu. */
+  function ambHTML(T) {
+    var sd = T.charCodeAt(0) * 977 + 13;
+    function rnd() { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; }
+    function it(cls, st, tag) { return '<' + (tag || 'i') + ' class="' + cls + '"' + (st ? ' style="' + st + '"' : '') + '></' + (tag || 'i') + '>'; }
+    function side() { var r = (rnd() * 0.85).toFixed(2); return (rnd() < 0.5 ? 'left' : 'right') + ':calc(var(--m)*' + r + ')'; }
+    function anim(d) { return ';animation-duration:' + d.toFixed(1) + 's;animation-delay:' + phase(d, rnd() * d); }
+    var back = '', deco = it('halo'), i;
+    if (T === 'M') {
+      back = it('cloud');
+      for (i = 0; i < 34; i++) { var dd = 0.6 + rnd() * 0.6; back += it('drop', 'left:' + (rnd() * 100).toFixed(1) + '%;height:' + (12 + rnd() * 14).toFixed(0) + 'px;animation-duration:' + dd.toFixed(2) + 's;animation-delay:' + phase(dd, rnd() * dd)); }
+      back += it('flash');
+    } else if (T === 'K') {
+      var ch = ['♠', '♥', '♦', '♣'];
+      for (i = 0; i < 22; i++) back += '<i class="su ' + (i % 4 === 1 || i % 4 === 2 ? 'red' : 'blk') + '" style="' + side() + ';--sw:' + ((rnd() - 0.5) * 12).toFixed(0) + 'px' + anim(6 + rnd() * 4) + '">' + ch[i % 4] + '</i>';
+    } else if (T === 'U') {
+      deco += it('ls h t') + it('ls h b') + it('ls v l') + it('ls v r') + it('dot t', 'animation-delay:' + phase(6.8, 0)) + it('dot b', 'animation-delay:' + phase(6.8, 0)) + it('dot l', 'animation-delay:' + phase(8.4, 0)) + it('dot r', 'animation-delay:' + phase(8.4, 0));
+    } else if (T === 'P') {
+      for (i = 0; i < 18; i++) { var w = (5 + rnd() * 8).toFixed(0); back += it('bb', side() + ';width:' + w + 'px;height:' + w + 'px;--sw:' + ((rnd() - 0.5) * 14).toFixed(0) + 'px' + anim(5 + rnd() * 5)); }
+    } else if (T === 'H') {
+      back = it('ecg t', 'animation-delay:' + phase(2.4, 0)) + it('ecg b', 'animation-delay:' + phase(2.4, 1.2));
+    } else {
+      var col = ['#7cb342', '#e08a2b', '#d9b73a', '#b5532f', '#98c24a'];
+      for (i = 0; i < 24; i++) back += it('lf', (rnd() < 0.7 ? side() : 'left:' + (rnd() * 100).toFixed(0) + '%') + ';background:' + col[i % 5] + ';--sw:' + ((rnd() - 0.5) * 40).toFixed(0) + 'px' + anim(7 + rnd() * 5));
+    }
+    return '<div class="amb amb-' + T + '" aria-hidden="true" style="--ph:-' + (Date.now() / 1000).toFixed(2) + 's">' + back + '<div class="bx">' + deco + '</div></div>';
+  }
+  function clueStates(c) {
+    var st = {};
+    if (!S.settings.aidCheck) return st;
+    puz.clues.forEach(function (cl) { st[cl.id] = evalPartial(puz, cl, c.place); });
+    return st;
+  }
+  function clueLI(cl, st) {
+    var s = st[cl.id], k = (s === true ? 'ok' : s === false ? 'ko' : '') + (curPop[cl.id] ? ' pop' : '');
+    return '<li class="' + k + '"><span class="ic" aria-hidden="true">' + (s === true ? '✓' : s === false ? '✕' : '·') + '</span><span>' + esc(clueText(puz, cl)) + (S.settings.aidCheck && s === true ? '<span class="sr" style="position:absolute;left:-9999px"> (vérifié)</span>' : '') + '</span></li>';
+  }
+  function dossierHTML(c, d, st) {
+    if (sel === null) {
+      return '<section class="panel dossier"><p class="who"><b>Choisissez un suspect</b><span>Touchez un personnage pour lire ses indices.</span></p></section>';
+    }
+    var p = puz.persons[sel], cell = c.place[sel];
+    var mine = puz.clues.filter(function (cl) { return cl.p === sel; });
+    if (sel === 0) {
+      return '<section class="panel dossier' + (curFx.dossier ? ' fx-in' : '') + '" aria-live="polite"><p class="who"><b>' + esc(p.name) + '</b><span>' + esc(p.job) + ' · Victime' + (cell >= 0 ? ' · ' + posLabel(cell) : '') + '</span></p><p class="story">' + esc(puz.story.text) + '</p><p class="vnote">' + (c.vauto ? 'Tous les suspects sont placés : la victime occupe la dernière case libre.' : 'Aucun indice pour la victime. Placez tous les suspects : elle prendra la dernière case libre.') + '</p></section>';
+    }
+    return '<section class="panel dossier' + (curFx.dossier ? ' fx-in' : '') + '" aria-live="polite"><p class="who"><b>' + esc(p.name) + '</b><span>' + esc(p.job) + ' · ' + (sel === 0 ? 'Victime' : 'Suspect') + ' · ' + (cell >= 0 ? 'placé' + (p.g === 'F' ? 'e' : '') + ' ' + posLabel(cell) : 'pas encore placé' + (p.g === 'F' ? 'e' : '')) + '</span><button class="bio-t" data-act="bio" aria-pressed="' + showBio + '">Profil</button></p>' + (showBio ? '<p class="story">' + esc(p.bio) + '</p>' : '') + '<ul class="clues">' + mine.map(function (cl) { return clueLI(cl, st); }).join('') + '</ul></section>';
+  }
+  function resultHTML() {
+    var k = puz.persons[puz.killer], v = puz.persons[0], rm = puz.rooms[puz.roomOf[puz.solution[puz.killer]]];
+    var c = card();
+    return '<section class="verdict"><span class="stamp">' + (c.status === 'solved' ? 'Affaire classée' : 'Solution') + '</span><p><b>' + esc(k.name) + '</b> était ' + (k.g === 'F' ? 'seule' : 'seul') + ' avec ' + esc(v.name) + ' ' + esc(rm.prep) + '.</p>' +
+      '<div class="stats"><span>Temps ' + fmtTime(c.time) + '</span><span>Indices ' + c.hints + '</span><span>Accusations ratées ' + c.wrong + '</span></div>' +
+      '<div class="row"><button class="btn primary" data-act="newSame">Nouvelle carte</button><button class="btn ghost" data-act="resetAsk">Rejouer celle-ci</button></div></section>';
+  }
+
+  /* Chemin de déduction complet, calculé comme un joueur */
+  var TECH = { clue: 'Direct', single: 'Direct', room: 'Direct', binary: 'Croisement', locked: 'Croisement', pair: 'Hypothèse', look: 'Hypothèse', deep: 'Raisonnement poussé' };
+  function solveSteps() {
+    if (stepsCache[puz.code]) return stepsCache[puz.code];
+    var h = humanSolve(puz, puz.clues, { maxLevel: 3 }), steps = h.steps.slice(), done = {};
+    steps.forEach(function (s) { done[s.p] = true; });
+    for (var p = 1; p < puz.N; p++) if (!done[p]) steps.push({ p: p, cell: puz.solution[p], tech: 'deep', level: 4, info: null });
+    return (stepsCache[puz.code] = steps);
+  }
+  function reasonHTML() {
+    var ss = solveSteps(), n = ss.length, out = '<section class="panel reason" id="reason"><span class="lbl">Le raisonnement</span><p class="gen-note">Voici comment résoudre cette carte, étape par étape, avec les mêmes techniques que le bouton Indice.</p>';
+    out += '<div class="row">' + (replay < 0
+      ? '<button class="btn small" data-act="replay" data-i="0">Rejouer pas à pas</button>'
+      : '<button class="btn ghost small" data-act="replay" data-i="' + Math.max(0, replay - 1) + '"' + (replay === 0 ? ' disabled' : '') + '>Précédent</button><button class="btn small" data-act="replay" data-i="' + Math.min(n, replay + 1) + '"' + (replay >= n ? ' disabled' : '') + '>Suivant</button><button class="btn ghost small" data-act="replay" data-i="-1">Tout afficher</button>') + '</div><ol>';
+    ss.forEach(function (s, i) {
+      var p = puz.persons[s.p], ex = explainStep(puz, s);
+      var cl = puz.clues.filter(function (x) { return x.p === s.p; }).map(function (x) { return '« ' + clueText(puz, x) + ' »'; }).join(', ');
+      out += '<li><button class="rstep' + (replay >= 0 && i > replay ? ' future' : '') + '" data-act="replay" data-i="' + i + '"' + (replay === i ? ' aria-current="step"' : '') + '><b>' + (i + 1) + '. ' + esc(p.name) + ' ' + esc(posLabel(s.cell)) + '</b><small>' + esc(ex.text) + '</small><small>Indices : ' + esc(cl) + '</small><span class="tgl">' + TECH[s.tech] + '</span></button></li>';
+    });
+    var k = puz.persons[puz.killer], v = puz.persons[0];
+    out += '<li><button class="rstep' + (replay >= 0 && replay < n ? ' future' : '') + '" data-act="replay" data-i="' + n + '"' + (replay === n ? ' aria-current="step"' : '') + '><b>' + (n + 1) + '. ' + esc(v.name) + ' prend la dernière case</b><small>' + esc(v.name) + ' est ' + esc(posLabel(puz.solution[0])) + '. Le seul suspect dans cette pièce est ' + esc(k.name) + ' : c’est le coupable.</small></button></li></ol></section>';
+    return out;
+  }
+
+  function cardsHTML(c, st, lk) {
+    return '<div class="cards" role="group" aria-label="Suspects">' + puz.persons.map(function (p, i) {
+      var pl = c.place[i] >= 0, mine = puz.clues.filter(function (cl) { return cl.p === i; });
+      var stt = cap1(p.job) + ' · ' + (i === 0 ? (pl ? 'Victime ' + posLabel(c.place[i]) : 'Victime') : pl ? 'placé' + (p.g === 'F' ? 'e' : '') + ' ' + posLabel(c.place[i]) : 'à placer');
+      var body = i === 0 ? '<span class="muted">' + esc(puz.story.short) + ' Aucun indice : ' + (p.g === 'F' ? 'elle' : 'il') + ' prend la dernière case libre.</span>' : mine.map(function (cl) {
+        var s2 = st[cl.id]; return '<span class="' + (s2 === true ? 'ok' : s2 === false ? 'ko' : '') + (curPop[cl.id] ? ' pop' : '') + '"><i aria-hidden="true">' + (s2 === true ? '✓' : s2 === false ? '✕' : '·') + '</i><span>' + esc(clueText(puz, cl)) + '</span></span>';
+      }).join('');
+      return '<article class="pcard' + (pl ? ' placed' : '') + (curFx.dossier && sel === i ? ' fx-sel' : '') + (curFx.hintP === i ? ' fx-hintp' : '') + '" role="button" tabindex="0" data-act="selp" data-p="' + i + '" aria-pressed="' + (sel === i) + '"><header>' + tok(i, 'big' + (sel === i && !lk ? ' sel' : '')) + '<div><h3>' + esc(p.name) + '</h3><span class="stt">' + stt + '</span></div></header>' + (i > 0 ? '<p class="bio">' + esc(p.bio) + '</p>' : '') + '<div class="cl">' + body + '</div></article>';
+    }).join('') + '</div>';
+  }
+  function renderPlay() {
+    var root = $('#view-play'), c = card();
+    if (!c || !puz) { root.innerHTML = '<div class="empty">Aucune carte ouverte. Générez-en une dans l’onglet Cartes.</div>'; return; }
+    var oldStrip = $('.strip', root), keepX = oldStrip ? oldStrip.scrollLeft : 0, keepY = window.pageYOffset || 0;
+    curFx = fx; fx = {};
+    var d = derive(c), st = clueStates(c), N = puz.N, lk = locked();
+    curPop = {};
+    if (animOn('check') && S.settings.aidCheck && lastClueCode === puz.code) puz.clues.forEach(function (cl) { if (st[cl.id] !== lastClue[cl.id] && st[cl.id] !== null && st[cl.id] !== undefined) curPop[cl.id] = true; });
+    lastClue = Object.assign({}, st); lastClueCode = puz.code;
+    var tut = tutOn(), tstep = null; tgtCell = -1;
+    if (tut && S.tut.i >= INTRO.length) { tstep = tutStep(c); if (tstep) { sel = tstep.p; tgtCell = tstep.cell; } }
+    var left = '<div class="meta"><div class="mi"><span class="mono code">' + c.code + '</span><span class="sub">' + puz.themeName + ' · ' + levelLabel(puz) + ' · ' + d.placed + '/' + N + '</span></div>' +
+      '<div class="row2"><button class="btn ghost small" data-act="gloss" aria-haspopup="dialog">Glossaire</button><button class="btn ghost small" data-act="menu" aria-haspopup="dialog">Options</button></div></div>';
+    var bc = c, bd = d;
+    if (lk && replay >= 0) {
+      var ss = solveSteps(), shown = {};
+      for (var q0 = 0; q0 <= replay && q0 < ss.length; q0++) shown[ss[q0].p] = true;
+      bc = Object.assign({}, c, { place: c.place.map(function (x, i) { return (i > 0 ? shown[i] : replay >= ss.length) ? x : -1; }) });
+      bd = derive(bc); tgtCell = replay < ss.length ? ss[replay].cell : -1;
+    }
+    left += boardHTML(bc, bd);
+    if (!lk) {
+      var hl = hs && hs.sig === sigOf(c) ? hs.stage : 0;
+      left += '<div class="row ctl"><div class="seg" role="radiogroup" aria-label="Mode de saisie" style="flex:1 1 auto">' +
+        [['place', 'Placer'], ['cross', 'Croix'], ['note', 'Notes']].map(function (m) { return '<button type="button" role="radio" aria-checked="' + (mode === m[0]) + '" data-act="mode" data-v="' + m[0] + '">' + m[1] + '</button>'; }).join('') + '</div>' +
+        (tut ? '' : '<button class="btn ghost small" data-act="hint" style="flex:0 0 auto" aria-label="Indice progressif, niveau ' + (hl + 1) + ' sur 3">' + (hl ? 'Indice ' + (hl + 1) + '/3' : 'Indice') + '</button>') +
+        '<button class="btn ghost small ib" data-act="undo" aria-label="Annuler" title="Annuler"' + (undoStack.length ? '' : ' disabled') + ' style="flex:0 0 auto"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg></button></div>' +
+        (tut ? coachHTML(c, d, tstep) : '<div class="msg' + (msgKind ? ' ' + msgKind : '') + '" id="msg" role="status" aria-live="polite">' + esc(msgText || defaultMsg(c, d)) + '</div>');
+      if (d.full && d.allOK) left += '<button class="btn primary" data-act="accuse">Accuser un suspect</button>';
+      if (!tut) left += '<div class="row hintrow" style="gap:8px"><button class="btn ghost small" data-act="check">Vérifier mes placements</button></div>';
+    } else left += resultHTML() + reasonHTML();
+    var right = cardsHTML(c, st, lk);
+    right += '<div class="strip" role="group" aria-label="Personnages">' + puz.persons.map(function (p, i) {
+      var pl = c.place[i] >= 0;
+      return '<button class="person' + (pl ? ' placed' : '') + (curFx.dossier && sel === i ? ' fx-sel' : '') + (curFx.hintP === i ? ' fx-hintp' : '') + '" data-act="selp" data-p="' + i + '" aria-pressed="' + (sel === i) + '" aria-label="' + esc(p.name + (i === 0 ? ', victime' : '') + (pl ? ', placé' + (p.g === 'F' ? 'e' : '') : '')) + '">' + tok(i, 'sm' + (sel === i && !lk ? ' sel' : '')) + '<span class="nm">' + esc(p.name) + '</span></button>';
+    }).join('') + '</div>';
+    right += dossierHTML(c, d, st);
+    if (!lk && !tut) right += aidsHTML();
+    root.innerHTML = '<div class="pl-left">' + left + '</div><div class="pl-right">' + right + '</div>';
+    // on reste à la même place : défilement de la page et de la rangée de profils inchangés
+    var strip = $('.strip', root);
+    if (strip) {
+      strip.scrollLeft = keepX;
+      var cur = strip.querySelector('[aria-pressed="true"]');
+      if (cur) { var l = cur.offsetLeft - strip.offsetLeft, r = l + cur.offsetWidth; if (l < strip.scrollLeft) strip.scrollLeft = Math.max(0, l - 8); else if (r > strip.scrollLeft + strip.clientWidth) strip.scrollLeft = r - strip.clientWidth + 8; }
+    }
+    if (Math.abs((window.pageYOffset || 0) - keepY) > 1) window.scrollTo(0, keepY);
+    postFx(curFx);
+  }
+  /* effets qui ont besoin du plan déjà affiché : jeton fantôme, jeton qui vole */
+  function addGhost(g) {
+    var el = $('.cell[data-cell="' + g.cell + '"]'); if (!el) return;
+    el.insertAdjacentHTML('beforeend', tok(g.p, 'ghost-tok'));
+    setTimeout(function () { var x = el.querySelector('.ghost-tok'); if (x) x.remove(); }, 560);
+  }
+  function flyToken(p, cell, delay, halo) {
+    var dst = $('.cell[data-cell="' + cell + '"] .tok'); if (!dst) return;
+    var src = null, cands = ['.pcard[data-p="' + p + '"] .tok', '.strip .person[data-p="' + p + '"] .tok'];
+    for (var k = 0; k < cands.length && !src; k++) { var e = $(cands[k]); if (e && e.getBoundingClientRect().width > 0) src = e; }
+    var cellEl = dst.closest('.cell');
+    var finish = function () { dst.style.visibility = ''; if (halo && cellEl) cellEl.insertAdjacentHTML('beforeend', '<i class="halo" aria-hidden="true"></i>'); };
+    if (!src || !dst.animate) { finish(); return; }
+    var a = src.getBoundingClientRect(), b = dst.getBoundingClientRect(), g = dst.cloneNode(true);
+    g.style.cssText = 'position:fixed;z-index:70;margin:0;pointer-events:none;transform-origin:0 0;left:' + a.left + 'px;top:' + a.top + 'px;width:' + a.width + 'px;height:' + a.height + 'px;font-size:' + (parseFloat(getComputedStyle(src).fontSize) || 16) + 'px';
+    dst.style.visibility = 'hidden'; document.body.appendChild(g);
+    var an = g.animate([{ transform: 'translate(0,0) scale(1)' }, { transform: 'translate(' + ((a.width * 0) + (b.left - a.left)) + 'px,' + (b.top - a.top) + 'px) scale(' + (b.width / a.width) + ')' }], { duration: 650, delay: delay || 0, easing: 'cubic-bezier(0.3, 1.15, 0.5, 1)', fill: 'both' });
+    var done = function () { g.remove(); finish(); };
+    an.onfinish = done; an.oncancel = done;
+  }
+  function postFx(F) {
+    if (F.ghost) addGhost(F.ghost);
+    if (F.flies) F.flies.forEach(function (f) { flyToken(f.p, f.cell, f.delay, f.halo); });
+  }
+  function confetti() {
+    var box = $('#fx'); if (!box) return;
+    var cols = ['#d6382d', '#2563eb', '#b45309', '#047857', '#6d28d9', '#be185d', '#f2c230'], h = '';
+    for (var k = 0; k < 70; k++) {
+      var dx = Math.round((Math.random() - 0.5) * 220), t = (1.6 + Math.random() * 1.4).toFixed(2), dl = (Math.random() * 0.5).toFixed(2);
+      h += '<i class="cf" style="--x:' + Math.round(Math.random() * 100) + '%;--c:' + cols[k % cols.length] + ';--dx:' + dx + 'px;--r:' + Math.round(180 + Math.random() * 720) + 'deg;--t:' + t + 's;--dl:' + dl + 's"></i>';
+    }
+    box.innerHTML = h; setTimeout(function () { box.innerHTML = ''; }, 3600);
+  }
+  function countUp(el) {
+    var to = +el.dataset.count, fmt = el.dataset.fmt, t0 = null, dur = 900;
+    var show = function (v) { el.textContent = fmt === 'time' ? fmtTime(v) : String(Math.round(v)); };
+    if (!to || !window.requestAnimationFrame) { show(to); return; }
+    show(0);
+    var step = function (ts) { if (t0 === null) t0 = ts; var k = Math.min(1, (ts - t0) / dur); show(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+  function praise(msg) {
+    if (!animOn('coach')) return;
+    var el = document.createElement('div'); el.className = 'praise'; el.textContent = msg; document.body.appendChild(el); setTimeout(function () { el.remove(); }, 1200);
+  }
+  function aidsHTML() {
+    var items = [
+      ['aidLines', 'Griser les cases déjà prises', 'Grise (et barre) les cases d’une ligne ou d’une colonne déjà occupée : il n’y a qu’une personne par ligne et par colonne. Met aussi en rouge deux personnes en conflit, y compris deux suspects dans la même pièce.'],
+      ['aidCheck', 'Pointer les indices', 'Coche ✓ les indices que votre plan respecte et barre ✕ ceux qu’il contredit. Les indices qu’on ne peut pas encore juger restent neutres.'],
+      ['aidCand', 'Montrer les cases possibles', 'Entoure en rouge les cases où le suspect choisi peut encore se trouver d’après ses indices et les lignes et colonnes libres, et grise les autres.']
+    ];
+    return '<section class="panel aids" aria-label="Aides"><span class="lbl">Aides (facultatives)</span>' + items.map(function (it) {
+      return '<button class="aid" data-act="aid" data-aid="' + it[0] + '" aria-pressed="' + !!S.settings[it[0]] + '"><span class="tg" aria-hidden="true"></span><span class="tx"><b>' + it[1] + '</b><small>' + it[2] + '</small></span></button>';
+    }).join('') + '</section>';
+  }
+  /* tous les suspects sont placés, mais la dernière case libre est occupée par un meuble : la victime n'a nulle part où aller */
+  function lastCellBlocked(c) {
+    var N = puz.N, rows = {}, cols = {};
+    if (c.place[0] >= 0) return false;
+    for (var p = 1; p < N; p++) { var cell = c.place[p]; if (cell < 0) return false; var r = (cell / N) | 0, cc = cell % N; if (rows[r] || cols[cc]) return false; rows[r] = cols[cc] = true; }
+    var r0 = -1, c0 = -1;
+    for (var x = 0; x < N; x++) { if (!rows[x]) r0 = x; if (!cols[x]) c0 = x; }
+    return isBlocked(puz, r0 * N + c0);
+  }
+  function defaultMsg(c, d) {
+    if (lastCellBlocked(c)) return 'La dernière case libre est bloquée par un meuble : la victime ne peut pas s’y tenir, donc un placement est faux.';
+    if (d.placed === 0 && c.status === 'new') return puz.story.short + ' Touchez un suspect, puis une case du plan.';
+    if (d.full && !d.allOK) return Object.keys(d.conflict).length ? 'Conflit : deux personnes sur une même ligne ou colonne, ou deux suspects dans une même pièce.' : 'Le plan est plein, mais un indice n’est pas respecté.';
+    if (d.full && d.allOK) return 'Tous les indices sont respectés. Qui est le coupable ?';
+    return mode === 'cross' ? 'Mode croix : barrez les cases où personne ne peut se trouver.' : mode === 'note' ? 'Mode notes : touchez une case pour y noter le suspect choisi, comme hypothèse.' : 'Un seul suspect par pièce. Choisissez un suspect, puis touchez une case.';
+  }
+
+  /* ---------- Actions de jeu ---------- */
+  function snapshot() { var c = card(); undoStack.push(JSON.stringify({ place: c.place, marks: c.marks, notes: c.notes, vauto: !!c.vauto })); if (undoStack.length > 60) undoStack.shift(); }
+  function touched(c) { if (c.status === 'new') c.status = 'playing'; }
+  function nextUnplaced(c, from) {
+    for (var k = 1; k <= puz.N; k++) { var j = (from + k) % puz.N; if (j !== 0 && c.place[j] < 0) return j; }
+    return null;
+  }
+  /* La victime n'a pas d'indice : quand tous les suspects sont placés, elle occupe la dernière case libre. */
+  function settle(c) {
+    if (c.vauto) { c.place[0] = -1; c.vauto = false; }
+    if (c.place[0] >= 0) return;
+    var N = puz.N, rows = {}, cols = {}, nr = 0, nc = 0;
+    for (var p = 1; p < N; p++) {
+      var cell = c.place[p]; if (cell < 0) return;
+      var r = (cell / N) | 0, cc = cell % N;
+      if (rows[r] || cols[cc]) return;
+      rows[r] = cols[cc] = true;
+    }
+    var r0 = -1, c0 = -1;
+    for (var x = 0; x < N; x++) { if (!rows[x]) r0 = x; if (!cols[x]) c0 = x; }
+    var vc = r0 * N + c0;
+    if (isBlocked(puz, vc) || c.place.indexOf(vc) >= 0) return;
+    c.place[0] = vc; c.vauto = true; c.marks = c.marks.filter(function (m) { return m !== vc; }); delete c.notes[vc];
+  }
+  function onCell(i) {
+    var c = card(); if (!c || locked()) return;
+    var d = derive(c), who = d.at[i], o = puz.objs[i], wasTut = tutOn();
+    if (tutOn()) {
+      if (S.tut.i < INTRO.length) { toast('Lisez d’abord l’introduction : bouton Suivant.'); return; }
+      var ts = tutStep(c);
+      if (ts) {
+        if (who !== undefined && who !== ts.p) return;
+        if (who === undefined && i !== ts.cell) { toast(isBlocked(puz, i) ? 'Cette case est bloquée par un meuble.' : 'Pas ici : relisez les indices ' + deN(puz.persons[ts.p].name) + '.'); if (isBlocked(puz, i)) { fxSet('shake', 'shake', i); renderPlay(); } return; }
+        mode = 'place'; sel = ts.p;
+      }
+    }
+    if (mode === 'cross') {
+      if (who !== undefined) { sel = who; renderPlay(); return; }
+      if (isBlocked(puz, i)) { fxSet('shake', 'shake', i); setMsg('Cette case est bloquée.', ''); renderPlay(); return; }
+      snapshot(); touched(c);
+      var ix = c.marks.indexOf(i); if (ix >= 0) c.marks.splice(ix, 1); else { c.marks.push(i); fxSet('cross', 'cross', i); }
+      persist(); renderPlay(); return;
+    }
+    if (mode === 'note') {
+      if (who !== undefined) { sel = who; renderPlay(); return; }
+      if (isBlocked(puz, i)) { fxSet('shake', 'shake', i); setMsg('Cette case est bloquée.', ''); renderPlay(); return; }
+      if (sel === null) { setMsg('Choisissez d’abord un personnage.', 'warn'); renderPlay(); return; }
+      snapshot(); touched(c);
+      var arr = (c.notes[i] || []).slice(), ni = arr.indexOf(sel);
+      if (ni >= 0) arr.splice(ni, 1); else { arr.push(sel); fxSet('cross', 'note', i); }
+      if (arr.length) c.notes[i] = arr; else delete c.notes[i];
+      persist(); renderPlay(); return;
+    }
+    if (who !== undefined) {
+      if (who === sel) { snapshot(); fxSet('remove', 'ghost', { p: who, cell: i }); c.place[who] = -1; settle(c); touched(c); setMsg(puz.persons[who].name + ' retiré' + (puz.persons[who].g === 'F' ? 'e' : '') + ' du plan.', ''); }
+      else { sel = who; setMsg('', ''); }
+      persist(); renderPlay(); return;
+    }
+    if (isBlocked(puz, i)) { fxSet('shake', 'shake', i); setMsg('Cette case est bloquée par ' + TYPES[o].art + ' ' + TYPES[o].name + '.', 'warn'); renderPlay(); return; }
+    if (sel === null) { setMsg('Choisissez d’abord un personnage.', 'warn'); renderPlay(); return; }
+    snapshot(); touched(c);
+    var hadV = c.place[0] >= 0;
+    c.place[sel] = i; var mi = c.marks.indexOf(i); if (mi >= 0) c.marks.splice(mi, 1); delete c.notes[i];
+    settle(c);
+    fxSet('place', 'place', i); fxSet('wave', 'wave', i); fxSet('roomhover', 'room', puz.roomOf[i]);
+    if (!hadV && c.vauto) fxSet('victim', 'flies', [{ p: 0, cell: c.place[0], delay: 420, halo: true }]);
+    if (wasTut) { fxSet('coach', 'coach', true); praise(['Bien vu !', 'Exact !', 'Bravo !'][Math.min(2, c.place.filter(function (x, k2) { return k2 > 0 && x >= 0; }).length - 1)]); }
+    var placedP = sel; sel = nextUnplaced(c, sel);
+    if (sel === null) sel = placedP;
+    var d2 = derive(c);
+    if (d2.full && d2.allOK) setMsg('Tous les indices sont respectés. Qui est le coupable ?', 'good');
+    else if (c.vauto && !d2.allOK) setMsg('La victime prend la dernière case libre, mais un indice n’est pas respecté.', 'warn');
+    else setMsg('', '');
+    persist(); renderPlay();
+  }
+  function wrongList(c) { var out = []; for (var p = 0; p < puz.N; p++) { if (p === 0 && c.vauto) continue; if (c.place[p] >= 0 && c.place[p] !== puz.solution[p]) out.push(p); } return out; }
+  function violated(c, p) {
+    var cell = c.place[p];
+    for (var k = 0; k < puz.clues.length; k++) { var cl = puz.clues[k]; if (cl.p !== p && cl.q !== p) continue; if (evalPartial(puz, cl, c.place) === false) return cl; }
+    return null;
+  }
+  /* Indice progressif : 1) regarder les indices d'un suspect, 2) pourquoi et dans quelle pièce, 3) la case */
+  function doHint() {
+    var c = card(); if (!c || locked()) return;
+    var sg = sigOf(c);
+    if (!hs || hs.sig !== sg) {
+      hs = { sig: sg, stage: 0, target: null };
+      var w = wrongList(c);
+      if (w.length) hs.target = { wrong: true, p: w[0], cell: puz.solution[w[0]] };
+      else {
+        var given = c.place.map(function (x, i) { return (i > 0 && x >= 0) ? x : -1; });
+        var step = nextDeduction(puz, puz.clues, given);
+        if (!step) { hs = null; setMsg('Tout est déjà en place.', ''); renderPlay(); return; }
+        hs.target = { wrong: false, p: step.p, cell: step.cell, step: step };
+      }
+    }
+    var t = hs.target, nm = puz.persons[t.p].name, ex = t.wrong ? null : explainStep(puz, t.step);
+    hs.stage++; touched(c); c.hints++;
+    if (hs.stage === 1) {
+      sel = t.p; fxSet('hint', 'hintP', t.p);
+      if (t.wrong) { flash = {}; flash[t.p] = true; setTimeout(function () { flash = {}; if (tab === 'play') renderPlay(); }, 2200); setMsg('Indice 1/3 · Un placement est faux : ' + nm + ' (en rouge). Relisez ses indices.', 'warn'); }
+      else setMsg('Indice 1/3 · Regardez de près les indices ' + deN(nm) + (t.step.info && t.step.info.with !== undefined ? ' et croisez-les avec ceux ' + deN(puz.persons[t.step.info.with].name) : '') + ' : la suite passe par là.', '');
+    } else if (hs.stage === 2) {
+      var rn = puz.rooms[puz.roomOf[t.cell]];
+      if (t.wrong) {
+        var vc = violated(c, t.p);
+        setMsg('Indice 2/3 · ' + (vc ? '« ' + clueText(puz, vc) + ' » n’est pas respecté par la case de ' + nm + '.' : nm + ' est en conflit avec une autre personne (même ligne, colonne ou pièce).') + ' La bonne case est ' + rn.prep + ' (pièce en surbrillance).', 'warn');
+      } else setMsg('Indice 2/3 · ' + ex.text + ' Sa case est ' + rn.prep + ' (pièce en surbrillance).', '');
+    } else {
+      snapshot();
+      var cell = t.cell, had0 = c.place[0] >= 0;
+      for (var q = 0; q < puz.N; q++) if (q !== t.p && c.place[q] === cell) c.place[q] = -1;
+      c.place[t.p] = cell; sel = t.p; settle(c);
+      var fl = [{ p: t.p, cell: cell, delay: 0 }];
+      if (!had0 && c.vauto) fl.push({ p: 0, cell: c.place[0], delay: 650, halo: true });
+      fxSet('hint', 'flies', fl); fxSet('wave', 'wave', cell);
+      var mi = c.marks.indexOf(cell); if (mi >= 0) c.marks.splice(mi, 1); delete c.notes[cell];
+      setMsg('Indice 3/3 · ' + nm + ' se trouve ' + posLabel(cell) + '.', 'good');
+      hs = null;
+    }
+    persist(); renderPlay();
+  }
+  function doCheck() {
+    var c = card(); if (!c || locked()) return;
+    hs = null;
+    var w = wrongList(c);
+    flash = {}; w.forEach(function (p) { flash[p] = true; });
+    var okS = {}; c.place.forEach(function (x, p) { if (x >= 0 && !(p === 0 && c.vauto) && x === puz.solution[p]) okS[p] = true; });
+    fxSet('verify', 'okSet', okS);
+    if (!c.place.some(function (x) { return x >= 0; })) setMsg('Rien à vérifier pour l’instant.', '');
+    else if (w.length) setMsg(w.length === 1 ? 'Un placement est faux (en rouge).' : w.length + ' placements sont faux (en rouge).', 'warn');
+    else setMsg('Tous les placements sont justes jusqu’ici.', 'good');
+    renderPlay();
+    setTimeout(function () { flash = {}; if (tab === 'play') renderPlay(); }, 2200);
+  }
+  function doUndo() {
+    var c = card(); if (!c || locked() || !undoStack.length) return;
+    var s = JSON.parse(undoStack.pop()); c.place = s.place; c.marks = s.marks; c.notes = s.notes || {}; c.vauto = !!s.vauto; settle(c);
+    persist(); renderPlay();
+  }
+
+  /* ---------- Initiation guidée ---------- */
+  function tutOn() { var c = card(); return !!(S.tut && S.tut.on && puz && puz.code === TUTO && c && c.status !== 'solved' && c.status !== 'revealed'); }
+  function tutStep(c) {
+    var given = c.place.map(function (x, i) { return (i > 0 && x >= 0 && x === puz.solution[i]) ? x : -1; });
+    return nextDeduction(puz, puz.clues, given);
+  }
+  function coachHTML(c, d, step) {
+    var t = S.tut, n = INTRO.length, skip = '<button class="btn ghost small" data-act="tutSkip">Passer l’initiation</button>';
+    if (t.i < n) {
+      var it = INTRO[t.i];
+      return '<section class="coach' + (curFx.coach ? ' fx-in' : '') + '" aria-live="polite"><span class="lbl">Initiation · ' + (t.i + 1) + '/' + (n + 3) + '</span><p><b>' + it[0] + '</b></p><p>' + it[1] + '</p><div class="row"><button class="btn primary small" data-act="tutNext">' + (t.i === n - 1 ? 'À vous de jouer' : 'Suivant') + '</button>' + skip + '</div></section>';
+    }
+    if (d.full && d.allOK) {
+      var rn = puz.rooms[puz.roomOf[puz.solution[0]]];
+      return '<section class="coach' + (curFx.coach ? ' fx-in' : '') + '" aria-live="polite"><span class="lbl">Dernière étape</span><p><b>Tout le monde est placé.</b></p><p>La victime a pris la dernière case libre, ' + rn.prep + '. Le coupable est le seul suspect qui se trouve avec ' + (puz.persons[0].g === 'F' ? 'elle' : 'lui') + ' dans cette pièce. Touchez « Accuser un suspect ».</p></section>';
+    }
+    if (!step) return '<section class="coach"><p>Bravo !</p></section>';
+    var p = puz.persons[step.p], mine = puz.clues.filter(function (cl) { return cl.p === step.p; }).map(function (cl) { return '« ' + clueText(puz, cl) + ' »'; }).join(', ');
+    var k = c.place.filter(function (x, i) { return i > 0 && x >= 0; }).length + 1;
+    return '<section class="coach' + (curFx.coach ? ' fx-in' : '') + '" aria-live="polite"><span class="lbl">Initiation · étape ' + k + '/' + (puz.N - 1) + '</span><p><b>' + esc(p.name) + ', ' + esc(p.job) + '</b></p><p class="cl">Indices : ' + esc(mine) + '</p><p>' + esc(explainStep(puz, step).text) + ' Touchez la case qui clignote.</p><div class="row">' + skip + '</div></section>';
+  }
+  function startTutorial() {
+    delete S.cards[TUTO]; S.order = S.order.filter(function (x) { return x !== TUTO; });
+    S.tut = { on: true, i: 0 };
+    openCard(TUTO, true);
+  }
+
+  /* ---------- Feuilles ---------- */
+  function openSheet(html) {
+    sheet = true; clearTimeout(closeTimer);
+    $('#layer').innerHTML = '<div class="backdrop" data-act="closeBackdrop"><div class="sheet" role="dialog" aria-modal="true" aria-label="Fenêtre">' + html + '</div></div>';
+    var f = $('#layer .sheet button, #layer .sheet input'); if (f) f.focus({ preventScroll: true });
+  }
+  function closeSheet() {
+    sheet = null;
+    var bd = $('#layer .backdrop');
+    if (bd && animOn('sheets')) { bd.classList.add('out'); clearTimeout(closeTimer); closeTimer = setTimeout(function () { if (!sheet) $('#layer').innerHTML = ''; }, 190); }
+    else $('#layer').innerHTML = '';
+  }
+  var GLOSS = [
+    ['Meubles de repos', 'Chaise, canapé et lit : on peut s’y installer. Leur case reste libre (cadre en pointillés blancs). « Installé sur un meuble de repos » veut dire sur l’un de ces trois.', ['chaise', 'canape', 'lit']],
+    ['Plantes', 'Plante verte et cactus. Ils occupent leur case : personne ne peut s’y tenir.', ['plante', 'cactus']],
+    ['Mobilier', 'Table, étagère, bar et malle. Ils occupent leur case.', ['table', 'etagere', 'bar', 'malle']],
+    ['Éclairage', 'La lampe occupe sa case.', ['lampe']],
+    ['Décor et loisirs', 'Télévision, piano, aquarium, statue, horloge et voiture. Ils occupent leur case.', ['tele', 'piano', 'aquarium', 'statue', 'horloge', 'voiture']],
+    ['Fenêtres et portes', 'Une fenêtre (trait bleu clair) est sur le mur extérieur : « près d’une fenêtre » vise la case qui la touche. Une porte (passage brun) relie deux pièces : « à côté d’une porte » vise l’une ou l’autre des deux cases qui la bordent.', ['win', 'door']],
+    ['Taille des pièces', 'La taille d’une pièce est son nombre de cases. « La plus grande pièce » n’est utilisé que lorsqu’une seule pièce est la plus grande.', []]
+  ];
+  var SPECIAL = { win: ['Fenêtre', 'demo win'], door: ['Porte', 'demo door'] };
+  function glossHTML(withRooms) {
+    var here = {};
+    if (puz) puz.objs.forEach(function (o) { if (o) here[o] = true; });
+    var out = '<div class="gl">';
+    if (withRooms && puz) {
+      out += '<section><h3>Les pièces de cette carte</h3><div class="rooms2">' + puz.rooms.map(function (rm, k) {
+        var f = floorOf(rm.name);
+        return '<span class="rm"><i class="swatch pt-' + f[0] + '" style="--a:' + f[1] + ';--b:' + f[2] + '"></i>' + esc(rm.name) + '</span>';
+      }).join('') + '</div></section>';
+    }
+    GLOSS.forEach(function (g) {
+      out += '<section><h3>' + g[0] + '</h3><p>' + g[1] + '</p>' + (g[2].length ? '<div class="items">' + g[2].map(function (k) {
+        if (SPECIAL[k]) return '<span class="it"><i class="' + SPECIAL[k][1] + '"></i>' + SPECIAL[k][0] + '</span>';
+        return '<span class="it' + (here[k] ? ' here' : '') + '">' + ART.icon(k, '') + TYPES[k].name + (here[k] ? '<span class="tag">ici</span>' : '') + '</span>';
+      }).join('') + '</div>' : '') + '</section>';
+    });
+    if (puz) out += '<p>Les objets marqués « ici » sont ceux de la carte en cours.</p>';
+    return out + '</div>';
+  }
+  function sheetGloss() {
+    openSheet('<h2>Glossaire</h2>' + glossHTML(true) + '<button class="btn primary" data-act="close">Fermer</button>');
+  }
+  function animSheetHTML() {
+    return '<h2>Animations</h2><p class="lead">Chaque animation se règle séparément. Elles restent actives même si votre appareil demande de réduire les animations : coupez ici celles qui vous gênent.</p>' +
+      '<div class="row"><button class="btn ghost small" data-act="animAll" data-v="1">Tout activer</button><button class="btn ghost small" data-act="animAll" data-v="0">Tout couper</button></div>' +
+      '<div class="animlist">' + ANIMS.map(function (g) {
+        return '<h3>' + g[0] + '</h3>' + g[1].map(function (a) {
+          return '<button class="opt" data-act="animT" data-k="' + a[0] + '" aria-pressed="' + animOn(a[0]) + '"><span class="tg" aria-hidden="true"></span><span class="tx"><b>' + a[1] + '</b><small>' + a[2] + '</small></span></button>';
+        }).join('');
+      }).join('') + '</div><button class="btn primary" data-act="close">Fermer</button>';
+  }
+  function refreshAnimSheet() { var sh = $('#layer .sheet'); if (!sh) return; var top = sh.scrollTop; sh.innerHTML = animSheetHTML(); sh.scrollTop = top; }
+  function sheetMenu() {
+    var c = card();
+    openSheet('<h2>Options de la carte</h2><div><span class="lbl">L’affaire</span><p class="story">' + esc(puz.story.text) + '</p></div><div><span class="lbl">Code à partager</span><div class="codefield" id="codeShown">' + c.code + '</div></div>' +
+      '<div class="row"><button class="btn ghost" data-act="copy">Copier le code</button><button class="btn ghost" data-act="resetAsk">Recommencer</button></div>' +
+      '<button class="btn ghost" data-act="animSheet">Animations</button>' +
+      (locked() ? '' : '<button class="btn ghost" data-act="revealAsk">Voir la solution</button>') +
+      '<button class="btn primary" data-act="close">Fermer</button>');
+  }
+  function sheetAccuse() {
+    openSheet('<h2>Qui est le coupable ?</h2><p class="lead">Le coupable est le seul suspect avec la victime dans sa pièce.</p><div class="pickgrid">' +
+      puz.persons.map(function (p, i) { return i === 0 ? '' : '<button class="pick' + (animOn('accuse') ? ' fx-flip' : '') + '" style="--i:' + i + '" data-act="accuseWho" data-p="' + i + '">' + tok(i, 'big') + esc(p.name) + '</button>'; }).join('') +
+      '</div><button class="btn ghost" data-act="close">Pas encore</button>');
+  }
+  function sheetWin() {
+    var c = card(), k = puz.persons[puz.killer], v = puz.persons[0], rm = puz.rooms[puz.roomOf[puz.solution[puz.killer]]];
+    openSheet('<span class="stamp">Affaire classée</span><h2>' + esc(k.name) + ' était le coupable</h2><p>' + esc(k.name) + ' était ' + (k.g === 'F' ? 'seule' : 'seul') + ' avec ' + esc(v.name) + ' ' + esc(rm.prep) + '.</p>' +
+      '<div class="stats"><span>Temps <b data-count="' + c.time + '" data-fmt="time">' + fmtTime(c.time) + '</b></span><span>Indices <b data-count="' + c.hints + '">' + c.hints + '</b></span><span>Accusations ratées <b data-count="' + c.wrong + '">' + c.wrong + '</b></span></div>' +
+      '<p class="story">' + esc(k.bio) + '</p>' +
+      (S.tut && S.tut.on && c.code === TUTO ? '<p class="lead">Initiation terminée ! Vous savez lire un plan, croiser les indices et accuser. Vous pouvez maintenant générer vos cartes, ou activer la difficulté mesurée pour les plus sérieuses.</p>' : '') +
+      '<button class="btn primary" data-act="newSame">Nouvelle carte</button><button class="btn ghost" data-act="reasonOpen">Voir le raisonnement</button><button class="btn ghost" data-act="close">Voir le plan</button>');
+    if (animOn('win')) { confetti(); document.querySelectorAll('#layer [data-count]').forEach(countUp); }
+    if (animOn('accuse')) { var sh = $('#layer .sheet'); if (sh) sh.classList.add('fx-shock'); }
+  }
+  function sheetConfirm(title, text, yes, yesLabel) {
+    openSheet('<h2>' + title + '</h2><p class="lead">' + text + '</p><div class="row"><button class="btn primary" data-act="' + yes + '">' + yesLabel + '</button><button class="btn ghost" data-act="close">Annuler</button></div>');
+  }
+
+  /* ---------- Règles ---------- */
+  function renderRules() {
+    var kinds = [
+      ['Pièce', 'Dans la cuisine', 'Le suspect est dans cette pièce. Le nom de chaque pièce est écrit sur le plan.'],
+      ['Décor de la pièce', 'Dans la pièce où il y a un piano', 'Le suspect est dans la pièce qui contient ce meuble, où qu’il se tienne.'],
+      ['À côté d’un meuble', 'À côté d’une plante', 'Case voisine du meuble (haut, bas, gauche, droite), dans la même pièce.'],
+      ['Siège', 'Sur une chaise', 'Le suspect est installé sur ce siège, ce canapé ou ce lit.'],
+      ['Un meuble de repos', 'Installé sur un meuble de repos', 'Le suspect est sur une chaise, un canapé ou un lit, peu importe lequel (voir le glossaire).'],
+      ['Pièce voisine', 'Dans une pièce voisine de celle de Marc', 'Les deux pièces se touchent par un mur.'],
+      ['Pièce éloignée', 'Dans une pièce éloignée de celle de Marc', 'Les deux pièces sont différentes et ne se touchent pas.'],
+      ['Biais', 'En biais, collé à Hugo', 'Case en diagonale, juste à côté de celle de l’autre suspect.'],
+      ['Exclusion', 'Pas dans le salon', 'Le suspect n’est pas dans cette pièce.'],
+      ['Fenêtre', 'Près d’une fenêtre', 'La case touche une fenêtre du mur extérieur (trait bleu clair).'],
+      ['Porte', 'À côté d’une porte', 'La case touche une porte entre deux pièces (passage brun), d’un côté ou de l’autre.'],
+      ['Taille', 'Dans la plus grande pièce', 'Comparaison du nombre de cases des pièces. Aussi : « plus grande que celle de Marc », « plus petite que… ».'],
+      ['Négations', 'Pas à côté d’une plante, pas sur un meuble de repos, pas près d’une fenêtre…', 'Le suspect ne fait pas ce qui est dit.'],
+      ['Métier', 'Dans une pièce voisine de celle du jardinier', 'Chaque personnage a un métier : un indice peut le désigner par son nom ou par son métier.']
+    ];
+    $('#view-regles').innerHTML =
+      '<h2>Comment jouer</h2><div class="panel"><p>Un crime a eu lieu dans un lieu découpé en pièces. Placez chaque personne sur le plan d’après les indices. Le coupable est le seul suspect qui se retrouve avec la victime dans la même pièce.</p></div>' +
+      '<div class="panel"><span class="lbl">Les règles</span><ol><li>Une personne par ligne et par colonne, victime comprise.</li><li>Un seul suspect par pièce. La seule pièce qui accueille deux personnes est celle de la victime : elle y est avec le tueur.</li><li>La victime n’a aucun indice. Quand tous les suspects sont placés, elle prend la dernière case libre. Comme tout le monde, elle ne peut pas se tenir sur un meuble qui bloque : si la dernière case en porte un, un placement est faux.</li><li>Un meuble comme une plante, une étagère ou un piano bloque sa case : elle reste vide. Une chaise, un canapé ou un lit (cadre en pointillés blancs) peut accueillir quelqu’un.</li><li>« À côté de » veut dire la case voisine en haut, en bas, à gauche ou à droite, dans la même pièce.</li><li>Les traits épais sont les murs. Chaque pièce a son sol et son nom écrit sur le plan.</li><li>Tous les indices sont vrais en même temps. Chaque carte n’a qu’une solution.</li><li>Quand le plan est plein, accusez le suspect qui partage la pièce de la victime.</li></ol></div>' +
+      '<div class="panel"><span class="lbl">Lire les indices</span><div class="tablewrap"><table><thead><tr><th>Type</th><th>Exemple</th><th>Sens</th></tr></thead><tbody>' +
+      kinds.map(function (k) { return '<tr><td>' + k[0] + '</td><td>' + k[1] + '</td><td>' + k[2] + '</td></tr>'; }).join('') + '</tbody></table></div></div>' +
+      '<div class="panel"><span class="lbl">Niveaux</span><p><b>Facile</b> : indices directs sur la pièce, les meubles, les fenêtres et les portes. <b>Moyen</b> : ajoute les relations entre suspects (pièces voisines, en biais, plus grande ou plus petite). <b>Difficile</b> : ajoute les exclusions et les pièces éloignées.</p><p><b>Difficulté mesurée</b> (option à la création) : au lieu de se fier aux types d’indices, l’appli résout la carte comme un joueur et note la technique la plus avancée nécessaire. <i>Facile</i> : cases uniques et pièces qui n’ont plus qu’un candidat. <i>Moyen</i> : il faut croiser deux indices ou verrouiller une zone. <i>Difficile</i> : il faut faire une hypothèse et chercher la contradiction. Le code de la carte porte alors une lettre (A, B ou C) à la place du chiffre.</p></div>' +
+      '<div class="panel"><span class="lbl">Glossaire des objets</span>' + glossHTML(false) + '</div>' +
+      '<div class="panel"><span class="lbl">Saisie et aides</span><p><b>Placer</b> pose le suspect choisi sur une case. La victime se place toute seule sur la dernière case libre. <b>Croix</b> barre une case où personne ne peut être. <b>Notes</b> inscrit l’initiale du suspect choisi dans une case, comme une hypothèse à confirmer : on peut en mettre plusieurs par case. Trois aides facultatives sont proposées sous le plan : griser les cases d’une ligne ou d’une colonne déjà occupée, pointer les indices avec ✓ ou ✕, et montrer les cases possibles. Une fois la carte résolue (ou la solution vue), la section « Le raisonnement » rejoue la déduction étape par étape sur le plan. Le bouton Profil d’un suspect donne un peu d’ambiance (lien avec la victime, mobile, version des faits) : ces détails ne servent pas à résoudre. Les animations se règlent une par une depuis l’onglet Cartes ou les Options de la carte. Le bouton Indice est progressif : un premier appui désigne le suspect à regarder, le deuxième explique le raisonnement et montre la pièce, le troisième place le suspect. Vérifier mes placements signale ceux qui sont faux.</p></div>' +
+      '<div class="panel"><span class="lbl">Initiation</span><p>Un mini-plan 4×4 guidé pas à pas explique le jeu. Il se lance depuis l’onglet Cartes.</p><button class="btn ghost small" data-act="tuto" style="align-self:flex-start">Lancer l’initiation</button></div>' +
+      '<div class="panel"><span class="lbl">Partager une carte</span><p>Chaque carte a un code, par exemple <span class="mono">62M-K7QX2P</span> : taille, niveau (un chiffre, ou une lettre A, B, C pour la difficulté mesurée), décor (M, K, U, P, H ou C), puis une graine. Envoyez ce code à un ami, il obtient exactement la même carte. Vos cartes et vos temps restent sur cet appareil.</p></div>' +
+      '<p class="gen-note">Alibi est une appli indépendante, inspirée du genre des puzzles de logique-enquête. Elle ne reprend ni les illustrations ni les cas d’un jeu existant.</p>';
+  }
+
+  /* ---------- Événements ---------- */
+  function copyCode() {
+    var c = card(); if (!c) return;
+    var done = function () { toast('Code copié'); };
+    var fail = function () {
+      var f = $('#codeShown'); if (f) { var r = document.createRange(); r.selectNodeContents(f); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+      toast('Copie impossible ici : le code est sélectionné');
+    };
+    try { navigator.clipboard.writeText(c.code).then(done, fail); } catch (e) { fail(); }
+  }
+  function generateNew() {
+    var s = S.settings, code = makeCode(s.N, s.D, s.T, randomSeed(Math.random), !!s.measured);
+    var btn = $('#btnGen'); if (btn) { btn.disabled = true; if (animOn('generate')) btn.innerHTML = '<span class="spin-wrap"><i class="spin"></i>Génération…</span>'; else btn.textContent = 'Génération…'; }
+    var work = function () {
+      openCard(code, true);
+      var b2 = $('#btnGen'); if (b2) { b2.disabled = false; b2.textContent = 'Générer une carte'; }
+    };
+    if (window.requestAnimationFrame) requestAnimationFrame(function () { setTimeout(work, 40); }); else setTimeout(work, 40);
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-act]'); if (!t) return;
+    var a = t.dataset.act;
+    if (a === 'closeBackdrop') { if (e.target === t) closeSheet(); return; }
+    switch (a) {
+      case 'tab': setTab(t.dataset.tab); break;
+      case 'setN': S.settings.N = +t.dataset.v; persist(); renderCartes(); break;
+      case 'setD': S.settings.D = +t.dataset.v; persist(); renderCartes(); break;
+      case 'setT': S.settings.T = t.dataset.v; persist(); renderCartes(); break;
+      case 'setMeasured': S.settings.measured = !S.settings.measured; persist(); renderCartes(); break;
+      case 'tuto': startTutorial(); break;
+      case 'animSheet': openSheet(animSheetHTML()); break;
+      case 'animT': { S.settings.anim[t.dataset.k] = !animOn(t.dataset.k); applyAnim(); persist(); refreshAnimSheet(); break; }
+      case 'animAll': { ANIM_KEYS.forEach(function (k) { S.settings.anim[k] = t.dataset.v === '1'; }); applyAnim(); persist(); refreshAnimSheet(); break; }
+      case 'bio': showBio = !showBio; renderPlay(); break;
+      case 'replay': {
+        replay = +t.dataset.i;
+        if (replay >= 0) { var rss = solveSteps(); fxSet('replay', 'place', replay < rss.length ? rss[replay].cell : puz.solution[0]); }
+        renderPlay(); break;
+      }
+      case 'reasonOpen': closeSheet(); replay = 0; fxSet('replay', 'place', solveSteps()[0].cell); renderPlay(); { var rs = $('#reason'); if (rs) rs.scrollIntoView({ block: 'start' }); } break;
+      case 'tutNext': S.tut.i++; fxSet('coach', 'coach', true); persist(); renderPlay(); break;
+      case 'tutSkip': S.tut.on = false; S.settings.tutDone = true; tgtCell = -1; persist(); renderPlay(); toast('Initiation terminée. Bonne enquête !'); break;
+      case 'gen': generateNew(); break;
+      case 'daily': openCard(dailyCode(localDate()), true); break;
+      case 'openCard': openCard(t.dataset.code, true); break;
+      case 'clear': confirmClear = true; renderCartes(); break;
+      case 'clearYes': {
+        var doClear = function () { S.cards = {}; S.order = []; S.current = null; puz = null; confirmClear = false; persist(); renderCartes(); toast('Historique effacé'); };
+        var rows = document.querySelectorAll('.card-row');
+        if (animOn('list') && rows.length) { rows.forEach(function (r, ri) { r.style.setProperty('--i', ri); r.classList.remove('fx-rowin'); r.classList.add('fx-fold'); }); setTimeout(doClear, 320 + rows.length * 30); }
+        else doClear();
+        break;
+      }
+      case 'cell': onCell(+t.dataset.cell); break;
+      case 'selp': sel = +t.dataset.p; fxSet('suspect', 'dossier', true); renderPlay(); break;
+      case 'mode': mode = t.dataset.v; setMsg('', ''); renderPlay(); break;
+      case 'aid': S.settings[t.dataset.aid] = !S.settings[t.dataset.aid]; persist(); renderPlay(); break;
+      case 'undo': doUndo(); break;
+      case 'hint': doHint(); break;
+      case 'check': doCheck(); break;
+      case 'accuse': sheetAccuse(); break;
+      case 'accuseWho': {
+        var c = card(), who = +t.dataset.p;
+        if (who === puz.killer) {
+          var wasTut = tutOn(); c.status = 'solved'; if (c.code === dailyCode(localDate())) updateStreak(); persist();
+          fxSet('accuse', 'shock', true); fxSet('accuse', 'halo', true);
+          closeSheet(); renderPlay(); sheetWin();
+          if (wasTut) { S.tut.on = false; S.settings.tutDone = true; persist(); }
+        } else {
+          c.wrong++; persist();
+          var wm = puz.persons[who].name + ' n’est pas le coupable. Regardez qui partage la pièce de la victime.';
+          if (animOn('wrong')) {
+            t.classList.add('wrongpick'); t.disabled = true;
+            if (!$('#layer .sheet .wrongmsg')) $('#layer .pickgrid').insertAdjacentHTML('afterend', '<p class="msg warn wrongmsg" role="status"></p>');
+            $('#layer .wrongmsg').textContent = wm; setMsg(wm, 'warn');
+          } else { closeSheet(); setMsg(wm, 'warn'); renderPlay(); }
+        }
+        break;
+      }
+      case 'menu': sheetMenu(); break;
+      case 'gloss': sheetGloss(); break;
+      case 'copy': copyCode(); break;
+      case 'close': closeSheet(); break;
+      case 'resetAsk': sheetConfirm('Recommencer la carte ?', 'Le plan, les croix et le temps repartent de zéro.', 'resetYes', 'Recommencer'); break;
+      case 'resetYes': { var c2 = card(); c2.place = new Array(puz.N).fill(-1); c2.marks = []; c2.notes = {}; c2.vauto = false; c2.time = 0; c2.hints = 0; c2.wrong = 0; c2.status = 'new'; undoStack = []; sel = 1; msgText = ''; msgKind = ''; persist(); closeSheet(); renderPlay(); updateTimer(); break; }
+      case 'revealAsk': sheetConfirm('Voir la solution ?', 'La carte sera marquée « Solution vue » et ne comptera pas comme résolue.', 'revealYes', 'Voir la solution'); break;
+      case 'revealYes': { var c3 = card(); c3.place = puz.solution.slice(); c3.marks = []; c3.notes = {}; c3.vauto = false; c3.status = 'revealed'; persist(); closeSheet(); renderPlay(); updateTimer(); break; }
+      case 'newSame': closeSheet(); generateNew(); break;
+    }
+  });
+  function clearRmh() { document.querySelectorAll('.cell.rmh').forEach(function (x) { x.classList.remove('rmh'); }); }
+  document.addEventListener('mouseover', function (e) {
+    if (!animOn('roomhover')) return;
+    var cell = e.target.closest ? e.target.closest('.board .cell') : null;
+    clearRmh();
+    if (!cell) return;
+    var m = /\br(\d+)\b/.exec(cell.className);
+    if (m) document.querySelectorAll('.board .cell.r' + m[1]).forEach(function (x) { x.classList.add('rmh'); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && sheet) closeSheet();
+    if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.getAttribute && e.target.getAttribute('role') === 'button' && e.target.dataset.act) { e.preventDefault(); e.target.click(); }
+  });
+  $('#codeForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = $('#codeInput').value, pc = parseCode(v), err = $('#codeErr');
+    if (!pc) { err.textContent = 'Code invalide. Format attendu : 62M-K7QX2P (taille 4 à 9, niveau 1 à 3 ou A à C, décor M, K, U, P, H ou C, puis 6 caractères).'; return; }
+    err.textContent = '';
+    if (openCard(pc.code, true)) $('#codeInput').value = '';
+  });
+
+  /* ---------- Chrono ---------- */
+  function updateTimer() {
+    var t = $('#timer'), c = card();
+    if (tab === 'play' && c) { t.hidden = false; t.textContent = fmtTime(c.time); } else t.hidden = true;
+  }
+  var tick = 0;
+  setInterval(function () {
+    var c = card();
+    if (c && c.status === 'playing' && document.visibilityState === 'visible' && !sheet) {
+      c.time++; tick++;
+      if (tab === 'play') { var t = $('#timer'); t.textContent = fmtTime(c.time); }
+      if (tick % 5 === 0) persist();
+    }
+  }, 1000);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') persist(); });
+
+  /* ---------- Démarrage ---------- */
+  applyAnim();
+  var start = (location.hash || '').replace('#', '');
+  if (S.current && S.cards[S.current]) { puz = getPuz(S.current); }
+  if (!puz) { if (!S.order.length && !S.settings.tutDone) { S.tut = { on: true, i: 0 }; openCard(TUTO, false); } else openCard(dailyCode(localDate()), false); }
+  else { var cc = card(); if (cc && !puz) puz = null; }
+  tab = (start === 'cartes' || start === 'regles') ? start : 'play';
+  setTab(tab);
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('./sw.js').catch(function () {}); });
+}
+</script>
+</body>
+</html>
