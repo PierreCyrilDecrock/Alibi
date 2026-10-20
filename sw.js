@@ -1,7 +1,7 @@
 /* Service worker d'Alibi : le jeu fonctionne hors ligne.
    Pour publier une nouvelle version : changez VERSION ci-dessous (ex. alibi-2),
    les téléphones récupèrent alors la nouvelle version au lancement suivant. */
-const VERSION = 'alibi-1';
+const VERSION = 'alibi-12';
 const CORE = [
   './',
   './index.html',
